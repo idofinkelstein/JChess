@@ -1,4 +1,9 @@
 package com.chess.engine.piece;
 
-public class Rook {
+import java.awt.*;
+
+public class Rook extends Piece{
+    public Rook(Point position) {
+        super(position);
+    }
 }

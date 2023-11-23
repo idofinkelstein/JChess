@@ -1,4 +1,9 @@
 package com.chess.engine.piece;
 
-public class Bishop {
+import java.awt.*;
+
+public class Bishop extends Piece {
+    public Bishop(Point position) {
+        super(position);
+    }
 }

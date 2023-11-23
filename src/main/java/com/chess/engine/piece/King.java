@@ -1,4 +1,9 @@
 package com.chess.engine.piece;
 
-public class King {
+import java.awt.*;
+
+public class King extends Piece {
+    public King(Point position) {
+        super(position);
+    }
 }

@@ -1,4 +1,9 @@
 package com.chess.engine.piece;
 
-public class Queen {
+import java.awt.*;
+
+public class Queen extends Piece {
+    public Queen(Point position) {
+        super(position);
+    }
 }
