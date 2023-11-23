@@ -8,9 +8,11 @@ import java.awt.*;
 public abstract class Piece {
 
     protected final Point position;
+    protected final Color color;
 
-    protected Piece(Point position) {
+    protected Piece(Point position, Color color) {
         this.position = position;
+        this.color = color;
     }
 
 }
