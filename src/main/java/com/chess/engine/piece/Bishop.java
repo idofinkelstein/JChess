@@ -9,6 +9,6 @@ public class Bishop extends Piece {
 
     @Override
     public String toString() {
-        return (color == Color.BLACK) ? PieceType.BISHOP.toString() : PieceType.BISHOP.toString().toLowerCase();
+        return PieceType.BISHOP.toString();
     }
 }

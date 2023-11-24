@@ -32,7 +32,27 @@ public class Board {
         return gameBoard[x][y];
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                String s = prettyPrint(gameBoard[x][y]);
+                builder.append(String.format("%3s", s));
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
 
+    private static String prettyPrint(Tile tile) {
+        if (tile.isOccupied()) {
+            return (tile.getPiece().getColor() == Color.BLACK)
+                    ? tile.getPiece().toString()
+                    : tile.getPiece().toString().toLowerCase();
+        }
+        return "-";
+    }
 
 
     public static class BoardBuilder {
