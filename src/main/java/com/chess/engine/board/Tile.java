@@ -26,6 +26,6 @@ public abstract class Tile {
     public int getYPosition() {
         return position.y;
     }
-    abstract boolean isOccupied();
-    abstract boolean isEmpty();
+    public abstract boolean isOccupied();
+    public abstract boolean isEmpty();
 }
