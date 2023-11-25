@@ -1,9 +1,10 @@
 package com.chess.engine.piece;
 
 import com.chess.engine.board.Board;
-import lombok.Getter;
+import com.chess.engine.move.Move;
 
 import java.awt.*;
+import java.util.List;
 
 public class Pawn extends Piece {
     public Pawn(Point position, Color color){
@@ -11,8 +12,8 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public void accept(MoveVisitor moveVisitor, Board board) {
-        moveVisitor.visit(this, board);
+    public List<Move> accept(MoveVisitor moveVisitor, Board board) {
+        return  moveVisitor.visit(this, board);
     }
 
     @Override

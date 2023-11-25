@@ -6,6 +6,8 @@ public class Main {
     public static void main(String[] args) {
         Board board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
         Piece knight = board.getTile(0, 1).getPiece();
-        knight.accept(new MoveVisitorImpl(), board);
+        Piece bishop = board.getTile(0, 2).getPiece();
+//        knight.accept(new MoveVisitorImpl(), board);
+        bishop.accept(new MoveVisitorImpl(), board);
     }
 }

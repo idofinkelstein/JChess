@@ -13,14 +13,11 @@ public abstract class Piece {
 
     protected final Point position;
     protected final Color color;
-    protected final List<Move> possibleMoves;
 
     protected Piece(Point position, Color color) {
         this.position = position;
         this.color = color;
-        this.possibleMoves = new ArrayList<>();
-
     }
 
-    public abstract void accept(MoveVisitor moveVisitor, Board board);
+    public abstract List<Move> accept(MoveVisitor moveVisitor, Board board);
 }

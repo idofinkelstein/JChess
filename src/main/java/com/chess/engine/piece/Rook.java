@@ -1,8 +1,10 @@
 package com.chess.engine.piece;
 
 import com.chess.engine.board.Board;
+import com.chess.engine.move.Move;
 
 import java.awt.*;
+import java.util.List;
 
 public class Rook extends Piece{
 
@@ -13,8 +15,8 @@ public class Rook extends Piece{
     }
 
     @Override
-    public void accept(MoveVisitor moveVisitor, Board board) {
-        moveVisitor.visit(this, board);
+    public List<Move> accept(MoveVisitor moveVisitor, Board board) {
+        return moveVisitor.visit(this, board);
     }
 
     public PieceType getPieceType() {
