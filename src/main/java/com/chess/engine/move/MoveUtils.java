@@ -22,4 +22,11 @@ public class MoveUtils {
             new Point(-1, 1),
             new Point(-1, -1),
     };
+
+    public static final Point[] ROOK_POSSIBLE_MOVES = {
+            new Point(1, 0),
+            new Point(-1, 0),
+            new Point(0, 1),
+            new Point(0, -1),
+    };
 }

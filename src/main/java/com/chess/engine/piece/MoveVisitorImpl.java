@@ -85,7 +85,37 @@ public class MoveVisitorImpl implements MoveVisitor {
 
     @Override
     public List<Move> visit(Rook rook, Board board) {
-        return null;
+        List<Move> moves = new ArrayList<>();
+        int currentX = rook.getPosition().x;
+        int currentY = rook.getPosition().y;
+
+        for (Point rookPossibleMove : ROOK_POSSIBLE_MOVES) {
+            int newX = currentX + rookPossibleMove.x;
+            int newY = currentY + rookPossibleMove.y;
+
+            while (isMoveValid(newX, newY)) {
+
+                Point newPosition = new Point(newX, newY);
+                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+
+                    Piece pieceOnTile = board.getTile(newX, newY).getPiece();
+                    if (!pieceOnTile.getColor().equals(rook.getColor())) { // There is enemy piece on the tile
+
+                        Move attackMove = new RookAttackMove(rook.getPosition(), newPosition, pieceOnTile);
+                        System.out.println(newX + " " + newY);
+                        moves.add(attackMove);
+                    }
+                    break;
+                } else {
+                    Move move = new RookMove(rook.getPosition(), newPosition);
+                    System.out.println(newX + " " + newY);
+                    moves.add(move);
+                }
+                newX += rookPossibleMove.x;
+                newY += rookPossibleMove.y;
+            }
+        }
+        return moves;
     }
 
     @Override
