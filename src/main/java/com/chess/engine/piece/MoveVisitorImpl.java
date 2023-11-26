@@ -80,7 +80,7 @@ public class MoveVisitorImpl implements MoveVisitor {
             }
         }
 
-        return moves;
+        return Collections.unmodifiableList(moves);
     }
 
     @Override
@@ -115,16 +115,71 @@ public class MoveVisitorImpl implements MoveVisitor {
                 newY += rookPossibleMove.y;
             }
         }
-        return moves;
+        return Collections.unmodifiableList(moves);
     }
 
     @Override
     public List<Move> visit(Queen queen, Board board) {
-        return null;
+        List<Move> moves = new ArrayList<>();
+
+        int currentX = queen.getPosition().x;
+        int currentY = queen.getPosition().y;
+
+        for (Point queenPossibleMove : QUEEN_POSSIBLE_MOVES) {
+            int newX = currentX + queenPossibleMove.x;
+            int newY = currentY + queenPossibleMove.y;
+
+            while (isMoveValid(newX, newY)) {
+                Point newPosition = new Point(newX, newY);
+                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+
+                    Piece pieceOnTile = board.getTile(newX, newY).getPiece();
+                    if (!pieceOnTile.getColor().equals(queen.getColor())) { // There is enemy piece on the tile
+
+                        Move attackMove = new QueenAttackMove(queen.getPosition(), newPosition, pieceOnTile);
+                        System.out.println(newX + " " + newY);
+                        moves.add(attackMove);
+                    }
+                    break;
+                } else {
+                    Move move = new QueenMove(queen.getPosition(), newPosition);
+                    System.out.println(newX + " " + newY);
+                    moves.add(move);
+                }
+                newX += queenPossibleMove.x;
+                newY += queenPossibleMove.y;
+            }
+        }
+        return Collections.unmodifiableList(moves);
     }
 
     @Override
     public List<Move> visit(King king, Board board) {
-        return null;
+        List<Move> moves = new ArrayList<>();
+        int currentX = king.getPosition().x;
+        int currentY = king.getPosition().y;
+
+        for (Point kingPossibleMove : KING_POSSIBLE_MOVES) {
+            int newX = currentX + kingPossibleMove.x;
+            int newY = currentY + kingPossibleMove.y;
+
+            if (isMoveValid(newX, newY)) {
+                Point newPosition = new Point(newX, newY);
+                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+                    Piece pieceOnTile = board.getTile(newX, newY).getPiece();
+                    if (!pieceOnTile.getColor().equals(king.getColor())) { // There is enemy piece on the tile
+
+                        Move attackMove = new KingAttackMove(king.getPosition(), newPosition, pieceOnTile);
+                        System.out.println(newX + " " + newY);
+                        moves.add(attackMove);
+                    }
+                } else {
+                    Move move = new KingMove(king.getPosition(), newPosition);
+                    System.out.println(newX + " " + newY);
+                    moves.add(move);
+                }
+            }
+        }
+        return Collections.unmodifiableList(moves);
     }
 }
