@@ -2,7 +2,9 @@ package com.chess.engine.board;
 
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
+import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
+import com.chess.engine.player.WhitePlayer;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -13,6 +15,8 @@ public class Board {
     public static final int BOARD_SIZE = 8;
     private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
     private  Player activePlayer;
+    private BlackPlayer blackPlayer;
+    private WhitePlayer whitePlayer;
 
     private Board(BoardBuilder builder) {
         for (int x = 0; x < BOARD_SIZE; x++) {
@@ -26,7 +30,8 @@ public class Board {
                 }
             }
         }
-
+        whitePlayer = new WhitePlayer(this);
+        blackPlayer = new BlackPlayer(this);
     }
     public Tile getTile(int x, int y) {
         return gameBoard[x][y];

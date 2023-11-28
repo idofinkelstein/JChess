@@ -2,10 +2,7 @@ package com.chess.engine.player;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.move.Move;
-import com.chess.engine.piece.Color;
-import com.chess.engine.piece.MoveVisitor;
-import com.chess.engine.piece.MoveVisitorImpl;
-import com.chess.engine.piece.Piece;
+import com.chess.engine.piece.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +11,25 @@ import static com.chess.engine.board.Board.BOARD_SIZE;
 
 public abstract class Player {
 
-    protected List<List<Move>> availableMoves;
     protected List<Piece> availablePieces;
-
+    protected List<List<Move>> availableMoves;
+    protected King king;
     protected List<Move> previousMoves;
 
     public Player(Board board) {
         this.availablePieces = calculateAvailablePieces(board);
         this.availableMoves = calculateAvailableMoves(board);
+        this.king = establishKing(board);
         this.previousMoves = new ArrayList<>();
+    }
+
+    private King establishKing(Board board) {
+        for (Piece piece : availablePieces) {
+            if (piece instanceof King) {
+                return (King) piece;
+            }
+        }
+        throw new IllegalStateException("No king found");
     }
 
     public List<Piece> calculateAvailablePieces(Board board) {
