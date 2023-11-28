@@ -14,7 +14,65 @@ import static com.chess.engine.move.MoveUtils.*;
 public class MoveVisitorImpl implements MoveVisitor {
     @Override
     public List<Move> visit(Pawn pawn, Board board) {
-        return null;
+        List<Move> moves = new ArrayList<>();
+        int currentX = pawn.getPosition().x;
+        int currentY = pawn.getPosition().y;
+        Color currentColor = pawn.getColor();
+
+        // Calculate regular moves
+        Point[] pawnPossibleMoves = (currentColor.equals(Color.WHITE))
+                ? WHITE_PAWN_POSSIBLE_MOVES
+                : BLACK_PAWN_POSSIBLE_MOVES;
+
+        for (Point pawnPossibleMove : pawnPossibleMoves) {
+
+            int newX = currentX + pawnPossibleMove.x;
+            int newY = currentY + pawnPossibleMove.y;
+
+            if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied()) {
+                Point newPosition = new Point(newX, newY);
+                Move move = new PawnMove(pawn.getPosition(), newPosition);
+                moves.add(move);
+            }
+        }
+
+        // Calculate jump moves
+        Point[] pawnPossibleJumpMoves = (currentColor.equals(Color.WHITE))
+                ? WHITE_PAWN_POSSIBLE_JUMP_MOVES
+                : BLACK_PAWN_POSSIBLE_JUMP_MOVES;
+
+        for (Point pawnPossibleJumpMove : pawnPossibleJumpMoves) {
+            int newX = currentX + pawnPossibleJumpMove.x;
+            int newY = currentY + pawnPossibleJumpMove.y;
+
+            if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied() && pawn.isFirstMove()) {
+                Point newPosition = new Point(newX, newY);
+                Move move = new PawnJumpMove(pawn.getPosition(), newPosition);
+                moves.add(move);
+            }
+        }
+
+        // Calculate attack moves
+        Point[] pawnPossibleAttackMoves = (currentColor.equals(Color.WHITE))
+                ? WHITE_PAWN_POSSIBLE_ATTACK_MOVES
+                : BLACK_PAWN_POSSIBLE_ATTACK_MOVES;
+
+        for (Point pawnPossibleAttackMove : pawnPossibleAttackMoves) {
+            int newX = currentX + pawnPossibleAttackMove.x;
+            int newY = currentY + pawnPossibleAttackMove.y;
+
+            if (isMoveValid(newX, newY) && board.getTile(newX, newY).isOccupied()) {
+                Point newPosition = new Point(newX, newY);
+                Piece pieceOnTile = board.getTile(newX, newY).getPiece();
+
+                if (!pieceOnTile.getColor().equals(pawn.getColor())) { // There is enemy piece
+                    Move move = new PawnAttackMove(pawn.getPosition(), newPosition, pieceOnTile);
+                    moves.add(move);
+                }
+            }
+        }
+
+        return Collections.unmodifiableList(moves);
     }
 
     @Override

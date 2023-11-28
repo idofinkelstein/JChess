@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class Board {
 
-    private static final int BOARD_SIZE = 8;
-    private Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
+    public static final int BOARD_SIZE = 8;
+    private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
     private  Player activePlayer;
 
     private Board(BoardBuilder builder) {
