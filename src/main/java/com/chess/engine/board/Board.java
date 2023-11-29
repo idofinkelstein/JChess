@@ -37,6 +37,13 @@ public class Board {
         return gameBoard[x][y];
     }
 
+    public Player getBlackPlayer() {
+        return blackPlayer;
+    }
+
+    public Player getWhitePlayer() {
+        return whitePlayer;
+    }
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

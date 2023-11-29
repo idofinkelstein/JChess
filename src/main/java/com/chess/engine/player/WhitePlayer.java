@@ -9,6 +9,11 @@ public class WhitePlayer extends Player {
     }
 
     @Override
+    public Player getOpponent(Board board) {
+        return board.getBlackPlayer();
+    }
+
+    @Override
     public Color getColor() {
         return Color.WHITE;
     }

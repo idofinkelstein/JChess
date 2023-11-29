@@ -10,4 +10,8 @@ public abstract class Move {
         this.destination = destination;
         this.source = source;
     }
+
+    public Move makeMove() {
+        return null;
+    }
 }
