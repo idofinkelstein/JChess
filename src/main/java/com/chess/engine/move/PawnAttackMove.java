@@ -6,8 +6,8 @@ import java.awt.*;
 
 public class PawnAttackMove extends Move{
     private final Piece attackedPiece;
-    public PawnAttackMove(Point destination, Point source, Piece attackedPiece) {
-        super(destination, source);
+    public PawnAttackMove(Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(movedPiece, destination, source);
         this.attackedPiece = attackedPiece;
     }
 }

@@ -7,8 +7,8 @@ import java.awt.*;
 public class KingAttackMove extends KingMove {
 
     private final Piece attackedPiece;
-    public KingAttackMove(Point destination, Point source, Piece attackedPiece) {
-        super(destination, source);
+    public KingAttackMove(Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(movedPiece, destination, source);
         this.attackedPiece = attackedPiece;
     }
 }

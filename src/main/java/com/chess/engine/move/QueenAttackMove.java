@@ -7,8 +7,8 @@ import java.awt.*;
 public class QueenAttackMove extends QueenMove{
 
     private Piece AttackedPiece;
-    public QueenAttackMove(Point destination, Point source, Piece attackedPiece) {
-        super(destination, source);
+    public QueenAttackMove(Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(movedPiece, destination, source);
         AttackedPiece = attackedPiece;
     }
 }

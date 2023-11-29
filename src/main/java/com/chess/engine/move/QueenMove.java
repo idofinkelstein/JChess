@@ -1,9 +1,11 @@
 package com.chess.engine.move;
 
+import com.chess.engine.piece.Piece;
+
 import java.awt.*;
 
 public class QueenMove extends Move {
-    public QueenMove(Point destination, Point source) {
-        super(destination, source);
+    public QueenMove(Piece movedPiece, Point destination, Point source) {
+        super(movedPiece, destination, source);
     }
 }

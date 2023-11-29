@@ -7,8 +7,8 @@ import java.awt.*;
 public class KnightAttackMove extends KnightMove{
 
     private final Piece attackedPiece;
-    public KnightAttackMove(Point destination, Point source, Piece attackedPiece) {
-        super(destination, source);
+    public KnightAttackMove(Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(movedPiece, destination, source);
         this.attackedPiece = attackedPiece;
     }
 }
