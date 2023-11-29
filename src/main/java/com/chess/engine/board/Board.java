@@ -1,14 +1,18 @@
 package com.chess.engine.board;
 
+import com.chess.engine.move.Move;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 
-import java.awt.*;
+
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class Board {
 
@@ -30,9 +34,37 @@ public class Board {
                 }
             }
         }
-        whitePlayer = new WhitePlayer(this);
-        blackPlayer = new BlackPlayer(this);
+        List<Piece> whitePieces = calculateAvailablePieces(Color.WHITE);
+        List<Piece> blackPieces = calculateAvailablePieces(Color.BLACK);
+        List<Move> whiteMoves = calculateAvailableMoves(whitePieces);
+        List<Move> blackMoves = calculateAvailableMoves(blackPieces);
+        whitePlayer = new WhitePlayer(this, whitePieces, whiteMoves, blackMoves);
+        blackPlayer = new BlackPlayer(this, blackPieces, blackMoves, whiteMoves);
     }
+
+    private List<Move> calculateAvailableMoves(List<Piece> pieces) {
+        List<Move> availableMoves = new ArrayList<>();
+        MoveVisitor moveVisitor = new MoveVisitorImpl();
+
+        for (Piece piece : pieces) {
+            availableMoves.addAll(piece.accept(moveVisitor, this));
+        }
+        return availableMoves;
+    }
+
+    private List<Piece> calculateAvailablePieces(Color color) {
+        List<Piece> availablePieces = new ArrayList<>();
+
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (gameBoard[i][j].isOccupied() && gameBoard[i][j].getPiece().getColor().equals(color)) {
+                    availablePieces.add(gameBoard[i][j].getPiece());
+                }
+            }
+        }
+        return availablePieces;
+    }
+
     public Tile getTile(int x, int y) {
         return gameBoard[x][y];
     }

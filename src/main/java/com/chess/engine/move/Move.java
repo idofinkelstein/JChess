@@ -1,9 +1,14 @@
 package com.chess.engine.move;
 
+import com.chess.engine.board.Board;
 import com.chess.engine.piece.Piece;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.awt.*;
 
+@EqualsAndHashCode
+@Getter
 public abstract class Move {
     private final Piece movedPiece;
     private final Point destination;
@@ -15,7 +20,5 @@ public abstract class Move {
         this.source = source;
     }
 
-    public Move makeMove() {
-        return null;
-    }
+//    public abstract Board makeMove();
 }

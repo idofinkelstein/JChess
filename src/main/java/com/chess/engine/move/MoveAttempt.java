@@ -5,13 +5,20 @@ import com.chess.engine.piece.Piece;
 
 public class MoveAttempt {
     private final Board board;
-    private final Piece MovedPiece;
-    private final Piece CapturedPiece;
+    private final Move move;
+    private final MoveStatus moveStatus;
 
-    public MoveAttempt(Board board, Piece MovedPiece, Piece CapturedPiece) {
+    public MoveAttempt(Board board, Move move, MoveStatus moveStatus) {
         this.board = board;
-        this.MovedPiece = MovedPiece;
-        this.CapturedPiece = CapturedPiece;
+        this.move = move;
+        this.moveStatus = moveStatus;
+    }
+
+    public enum MoveStatus {
+        OK,
+        ILLEGAL_MOVE,
+        LEAVES_KING_IN_CHECK,
+
     }
 
 }

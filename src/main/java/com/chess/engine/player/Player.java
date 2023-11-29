@@ -4,7 +4,9 @@ import com.chess.engine.board.Board;
 import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.piece.*;
+import com.chess.engine.piece.Color;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +14,29 @@ import static com.chess.engine.board.Board.BOARD_SIZE;
 
 public abstract class Player {
 
+    private final boolean isIncheck;
     protected List<Piece> availablePieces;
     protected List<Move> availableMoves;
+    protected List<Move> opponentAvailableMoves;
     protected King king;
     protected List<Move> previousMoves;
 
-    public Player(Board board) {
-        this.availablePieces = calculateAvailablePieces(board);
-        this.availableMoves = calculateAvailableMoves(board);
+    public Player(Board board, List<Piece> availablePieces, List<Move> availableMoves, List<Move> opponentAvailableMoves) {
+        this.availablePieces = availablePieces;
+        this.availableMoves = availableMoves;
+        this.opponentAvailableMoves = opponentAvailableMoves;
         this.king = establishKing(board);
         this.previousMoves = new ArrayList<>();
+        this.isIncheck = calculateAttackOnTile(king.getPosition(), opponentAvailableMoves);
+    }
+
+    private static boolean calculateAttackOnTile(Point position, List<Move> moves) {
+        for (Move move : moves) {
+            if (move.getDestination().equals(position)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private King establishKing(Board board) {
@@ -75,13 +90,21 @@ public abstract class Player {
 
     public abstract Player getOpponent(Board board);
 
-    public MoveAttempt makeMove(Move move) {
-        move.makeMove();
+    // Consider passing the board to the constructor instead of calling the makeMove() with the board as argument
+    public MoveAttempt makeMove(Move move, Board board) {
+
+        if (!isMoveLegal(move)) {
+            return new MoveAttempt(board, move, MoveAttempt.MoveStatus.ILLEGAL_MOVE);
+        }
+
+//        Board board = move.makeMove();
+        // check if current player's king is in check
+
+
         return null;
     }
 
     public boolean isMoveLegal(Move move) {
-
         return availableMoves.contains(move);
     }
 
