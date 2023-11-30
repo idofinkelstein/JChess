@@ -5,6 +5,7 @@ import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,7 +13,10 @@ import java.util.List;
 
 import static com.chess.engine.board.Board.BOARD_SIZE;
 
+@Getter
 public abstract class Player {
+
+    protected final Board board;
 
     private final boolean isIncheck;
     protected List<Piece> availablePieces;
@@ -22,24 +26,30 @@ public abstract class Player {
     protected List<Move> previousMoves;
 
     public Player(Board board, List<Piece> availablePieces, List<Move> availableMoves, List<Move> opponentAvailableMoves) {
+        this.board = board;
         this.availablePieces = availablePieces;
         this.availableMoves = availableMoves;
         this.opponentAvailableMoves = opponentAvailableMoves;
-        this.king = establishKing(board);
+        this.king = establishKing();
         this.previousMoves = new ArrayList<>();
-        this.isIncheck = calculateAttackOnTile(king.getPosition(), opponentAvailableMoves);
+        this.isIncheck = isKingInCheck();
     }
 
-    private static boolean calculateAttackOnTile(Point position, List<Move> moves) {
+    public static List<Move> calculateAttackOnTile(Point position, List<Move> moves) {
+        List<Move> movesOnTile = new ArrayList<>();
         for (Move move : moves) {
             if (move.getDestination().equals(position)) {
-                return true;
+                movesOnTile.add(move);
             }
         }
-        return false;
+        return movesOnTile;
     }
 
-    private King establishKing(Board board) {
+    public boolean isKingInCheck() {
+        return !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
+    }
+
+    private King establishKing() {
         for (Piece piece : availablePieces) {
             if (piece instanceof King) {
                 return (King) piece;
@@ -48,7 +58,7 @@ public abstract class Player {
         throw new IllegalStateException("No king found");
     }
 
-    public List<Piece> calculateAvailablePieces(Board board) {
+    public List<Piece> calculateAvailablePieces() {
         List<Piece> availablePieces = new ArrayList<>();
 
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -66,7 +76,7 @@ public abstract class Player {
         return availablePieces;
     }
 
-    public List<Move> calculateAvailableMoves(Board board) {
+    public List<Move> calculateAvailableMoves() {
         MoveVisitor moveVisitor = new MoveVisitorImpl();
         List<Move> moves = new ArrayList<Move>();
 
@@ -76,19 +86,19 @@ public abstract class Player {
         return moves;
     }
 
-    public boolean isInCheck(Board board) {
+    public boolean isInCheck() {
         return false;
     }
 
-    public boolean isCheckmate(Board board) {
+    public boolean isCheckmate() {
         return false;
     }
 
-    public boolean isInStalemate(Board board) {
+    public boolean isInStalemate() {
         return false;
     }
 
-    public abstract Player getOpponent(Board board);
+    public abstract Player getOpponent();
 
     // Consider passing the board to the constructor instead of calling the makeMove() with the board as argument
     public MoveAttempt makeMove(Move move, Board board) {
@@ -97,11 +107,16 @@ public abstract class Player {
             return new MoveAttempt(board, move, MoveAttempt.MoveStatus.ILLEGAL_MOVE);
         }
 
-//        Board board = move.makeMove();
+        Board transitionBoard = move.makeMove();
         // check if current player's king is in check
+        List<Move> attacksOnKing = calculateAttackOnTile(transitionBoard.getCurrentPlayer().getOpponent().getKing().getPosition(),
+                transitionBoard.getCurrentPlayer().getAvailableMoves());
 
+        if (!attacksOnKing.isEmpty()) {
+            return new MoveAttempt(transitionBoard, move, MoveAttempt.MoveStatus.LEAVES_KING_IN_CHECK);
+        }
 
-        return null;
+        return new MoveAttempt(transitionBoard, move, MoveAttempt.MoveStatus.OK);
     }
 
     public boolean isMoveLegal(Move move) {

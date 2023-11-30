@@ -98,6 +98,14 @@ public class Board {
         return "-";
     }
 
+    public Player getCurrentPlayer() {
+        return null;
+    }
+
+    public Player getOpponent() {
+        return null;
+    }
+
 
     public static class BoardBuilder {
 

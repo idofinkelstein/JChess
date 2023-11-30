@@ -20,5 +20,5 @@ public abstract class Move {
         this.source = source;
     }
 
-//    public abstract Board makeMove();
+    public abstract Board makeMove();
 }
