@@ -31,7 +31,7 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied()) {
                 Point newPosition = new Point(newX, newY);
-                Move move = new PawnMove(pawn, pawn.getPosition(), newPosition);
+                Move move = new PawnMove(board, pawn, newPosition, pawn.getPosition());
                 moves.add(move);
             }
         }
@@ -47,7 +47,7 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied() && pawn.isFirstMove()) {
                 Point newPosition = new Point(newX, newY);
-                Move move = new PawnJumpMove(pawn, pawn.getPosition(), newPosition);
+                Move move = new PawnJumpMove(board, pawn, newPosition, pawn.getPosition());
                 moves.add(move);
             }
         }
@@ -66,12 +66,11 @@ public class MoveVisitorImpl implements MoveVisitor {
                 Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
                 if (!pieceOnTile.getColor().equals(pawn.getColor())) { // There is enemy piece
-                    Move move = new PawnAttackMove(pawn, pawn.getPosition(), newPosition, pieceOnTile);
+                    Move move = new PawnAttackMove(board, pawn, newPosition, pawn.getPosition(), pieceOnTile);
                     moves.add(move);
                 }
             }
         }
-
         return Collections.unmodifiableList(moves);
     }
 
@@ -92,13 +91,11 @@ public class MoveVisitorImpl implements MoveVisitor {
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
                     if (!pieceOnTile.getColor().equals(knight.getColor())) { // There is enemy piece on the tile
-                        Move attackMove = new KnightAttackMove(knight, knight.getPosition(), newPosition, pieceOnTile);
-                        System.out.println(newX + " " + newY);
+                        Move attackMove = new KnightAttackMove(board, knight, newPosition, knight.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
                 } else {
-                    Move move = new KnightMove(knight, knight.getPosition(), newPosition);
-                    System.out.println(newX + " " + newY);
+                    Move move = new KnightMove(board, knight, newPosition, knight.getPosition());
                     moves.add(move);
                 }
             }
@@ -123,21 +120,18 @@ public class MoveVisitorImpl implements MoveVisitor {
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
                     if (!pieceOnTile.getColor().equals(bishop.getColor())) { // There is enemy piece on the tile
-                        Move attackMove = new BishopAttackMove(bishop, bishop.getPosition(), newPosition, pieceOnTile);
-                        System.out.println(newX + " " + newY);
+                        Move attackMove = new BishopAttackMove(board, bishop,  newPosition, bishop.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
                     break;
                 } else {
-                    Move move = new BishopMove(bishop, bishop.getPosition(), newPosition);
-                    System.out.println(newX + " " + newY);
+                    Move move = new BishopMove(board, bishop, newPosition, bishop.getPosition());
                     moves.add(move);
                 }
                 newX += bishopPossibleMove.x;
                 newY += bishopPossibleMove.y;
             }
         }
-
         return Collections.unmodifiableList(moves);
     }
 
@@ -159,14 +153,12 @@ public class MoveVisitorImpl implements MoveVisitor {
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
                     if (!pieceOnTile.getColor().equals(rook.getColor())) { // There is enemy piece on the tile
 
-                        Move attackMove = new RookAttackMove(rook, rook.getPosition(), newPosition, pieceOnTile);
-                        System.out.println(newX + " " + newY);
+                        Move attackMove = new RookAttackMove(board, rook,  newPosition, rook.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
                     break;
                 } else {
-                    Move move = new RookMove(rook, rook.getPosition(), newPosition);
-                    System.out.println(newX + " " + newY);
+                    Move move = new RookMove(board, rook, newPosition, rook.getPosition());
                     moves.add(move);
                 }
                 newX += rookPossibleMove.x;
@@ -194,14 +186,12 @@ public class MoveVisitorImpl implements MoveVisitor {
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
                     if (!pieceOnTile.getColor().equals(queen.getColor())) { // There is enemy piece on the tile
 
-                        Move attackMove = new QueenAttackMove(queen, queen.getPosition(), newPosition, pieceOnTile);
-                        System.out.println(newX + " " + newY);
+                        Move attackMove = new QueenAttackMove(board, queen,  newPosition, queen.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
                     break;
                 } else {
-                    Move move = new QueenMove(queen, queen.getPosition(), newPosition);
-                    System.out.println(newX + " " + newY);
+                    Move move = new QueenMove(board, queen, newPosition, queen.getPosition());
                     moves.add(move);
                 }
                 newX += queenPossibleMove.x;
@@ -227,13 +217,11 @@ public class MoveVisitorImpl implements MoveVisitor {
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
                     if (!pieceOnTile.getColor().equals(king.getColor())) { // There is enemy piece on the tile
 
-                        Move attackMove = new KingAttackMove(king, king.getPosition(), newPosition, pieceOnTile);
-                        System.out.println(newX + " " + newY);
+                        Move attackMove = new KingAttackMove(board, king,  newPosition, king.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
                 } else {
-                    Move move = new KingMove(king, king.getPosition(), newPosition);
-                    System.out.println(newX + " " + newY);
+                    Move move = new KingMove(board, king, newPosition, king.getPosition());
                     moves.add(move);
                 }
             }

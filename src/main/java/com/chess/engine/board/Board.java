@@ -6,6 +6,7 @@ import com.chess.engine.piece.Color;
 import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
+import lombok.Getter;
 
 
 import java.awt.Point;
@@ -19,12 +20,13 @@ public class Board {
     public static final int BOARD_SIZE = 8;
     private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
     private  Player activePlayer;
-    private BlackPlayer blackPlayer;
-    private WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+    private final WhitePlayer whitePlayer;
 
     private Board(BoardBuilder builder) {
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
+
                 Point position = new Point(x, y);
                 if (builder.PieceOnTileMap.containsKey(position)) {
                     gameBoard[x][y] = new OccupiedTile(x, y, builder.PieceOnTileMap.get(position));
@@ -36,10 +38,54 @@ public class Board {
         }
         List<Piece> whitePieces = calculateAvailablePieces(Color.WHITE);
         List<Piece> blackPieces = calculateAvailablePieces(Color.BLACK);
+
         List<Move> whiteMoves = calculateAvailableMoves(whitePieces);
         List<Move> blackMoves = calculateAvailableMoves(blackPieces);
+
         whitePlayer = new WhitePlayer(this, whitePieces, whiteMoves, blackMoves);
         blackPlayer = new BlackPlayer(this, blackPieces, blackMoves, whiteMoves);
+
+        activePlayer = (builder.getActivePlayer() == Color.WHITE)? whitePlayer : blackPlayer;
+    }
+
+    private static String prettyPrint(Tile tile) {
+        if (tile.isOccupied()) {
+            return (tile.getPiece().getColor() == Color.BLACK)
+                    ? tile.getPiece().toString()
+                    : tile.getPiece().toString().toLowerCase();
+        }
+        return "-";
+    }
+    public Tile getTile(int x, int y) {
+        return gameBoard[x][y];
+    }
+
+    public Player getBlackPlayer() {
+        return blackPlayer;
+    }
+
+    public Player getWhitePlayer() {
+        return whitePlayer;
+    }
+    public Player getCurrentPlayer() {
+        return activePlayer;
+    }
+
+    public Player getOpponent() {
+        return activePlayer.getOpponent();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                String s = prettyPrint(gameBoard[x][y]);
+                builder.append(String.format("%3s", s));
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
     }
 
     private List<Move> calculateAvailableMoves(List<Piece> pieces) {
@@ -65,51 +111,10 @@ public class Board {
         return availablePieces;
     }
 
-    public Tile getTile(int x, int y) {
-        return gameBoard[x][y];
-    }
-
-    public Player getBlackPlayer() {
-        return blackPlayer;
-    }
-
-    public Player getWhitePlayer() {
-        return whitePlayer;
-    }
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (int x = 0; x < BOARD_SIZE; x++) {
-            for (int y = 0; y < BOARD_SIZE; y++) {
-                String s = prettyPrint(gameBoard[x][y]);
-                builder.append(String.format("%3s", s));
-            }
-            builder.append("\n");
-        }
-        return builder.toString();
-    }
-
-    private static String prettyPrint(Tile tile) {
-        if (tile.isOccupied()) {
-            return (tile.getPiece().getColor() == Color.BLACK)
-                    ? tile.getPiece().toString()
-                    : tile.getPiece().toString().toLowerCase();
-        }
-        return "-";
-    }
-
-    public Player getCurrentPlayer() {
-        return null;
-    }
-
-    public Player getOpponent() {
-        return null;
-    }
-
-
     public static class BoardBuilder {
 
         private final Map<Point, Piece> PieceOnTileMap = new HashMap<>();
+        @Getter
         private Color activePlayer;
 
 
@@ -169,5 +174,13 @@ public class Board {
             return this;
         }
 
+        public BoardBuilder placePiecesExcluding(List<Piece> pieces, List<Piece> excludedPieces) {
+            for (Piece piece : pieces) {
+                if (excludedPieces == null || !excludedPieces.contains(piece)) {
+                    PieceOnTileMap.put(piece.getPosition(), piece);
+                }
+            }
+            return this;
+        }
     }
 }

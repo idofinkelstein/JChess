@@ -25,7 +25,11 @@ public abstract class Player {
     protected King king;
     protected List<Move> previousMoves;
 
-    public Player(Board board, List<Piece> availablePieces, List<Move> availableMoves, List<Move> opponentAvailableMoves) {
+    public Player(Board board,
+                  List<Piece> availablePieces,
+                  List<Move> availableMoves,
+                  List<Move> opponentAvailableMoves) {
+
         this.board = board;
         this.availablePieces = availablePieces;
         this.availableMoves = availableMoves;
@@ -43,19 +47,6 @@ public abstract class Player {
             }
         }
         return movesOnTile;
-    }
-
-    public boolean isKingInCheck() {
-        return !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
-    }
-
-    private King establishKing() {
-        for (Piece piece : availablePieces) {
-            if (piece instanceof King) {
-                return (King) piece;
-            }
-        }
-        throw new IllegalStateException("No king found");
     }
 
     public List<Piece> calculateAvailablePieces() {
@@ -98,9 +89,17 @@ public abstract class Player {
         return false;
     }
 
-    public abstract Player getOpponent();
+    public boolean isMoveLegal(Move move) {
+        return availableMoves.contains(move);
+    }
 
-    // Consider passing the board to the constructor instead of calling the makeMove() with the board as argument
+    public boolean isKingInCheck() {
+        return !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
+    }
+
+    public abstract Player getOpponent();
+    public abstract Color getColor();
+
     public MoveAttempt makeMove(Move move, Board board) {
 
         if (!isMoveLegal(move)) {
@@ -112,16 +111,19 @@ public abstract class Player {
         List<Move> attacksOnKing = calculateAttackOnTile(transitionBoard.getCurrentPlayer().getOpponent().getKing().getPosition(),
                 transitionBoard.getCurrentPlayer().getAvailableMoves());
 
-        if (!attacksOnKing.isEmpty()) {
+        if (!attacksOnKing.isEmpty()) { // this move leaves king in check
             return new MoveAttempt(transitionBoard, move, MoveAttempt.MoveStatus.LEAVES_KING_IN_CHECK);
         }
 
         return new MoveAttempt(transitionBoard, move, MoveAttempt.MoveStatus.OK);
     }
 
-    public boolean isMoveLegal(Move move) {
-        return availableMoves.contains(move);
+    private King establishKing() {
+        for (Piece piece : availablePieces) {
+            if (piece instanceof King) {
+                return (King) piece;
+            }
+        }
+        throw new IllegalStateException("No king found");
     }
-
-    public abstract Color getColor();
 }

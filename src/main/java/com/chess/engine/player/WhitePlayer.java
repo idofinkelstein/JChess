@@ -8,7 +8,10 @@ import com.chess.engine.piece.Piece;
 import java.util.List;
 
 public class WhitePlayer extends Player {
-    public WhitePlayer(Board board, List<Piece> availablePieces, List<Move> availableMoves, List<Move> opponentAvailableMoves) {
+    public WhitePlayer(Board board,
+                       List<Piece> availablePieces,
+                       List<Move> availableMoves,
+                       List<Move> opponentAvailableMoves) {
         super(board, availablePieces, availableMoves, opponentAvailableMoves);
     }
 

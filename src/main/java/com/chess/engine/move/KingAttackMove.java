@@ -1,16 +1,15 @@
 package com.chess.engine.move;
 
+import com.chess.engine.board.Board;
 import com.chess.engine.piece.Piece;
 import lombok.EqualsAndHashCode;
 
 import java.awt.*;
 
 @EqualsAndHashCode(callSuper = true)
-public class KingAttackMove extends KingMove {
+public class KingAttackMove extends AttackMove {
 
-    private final Piece attackedPiece;
-    public KingAttackMove(Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
-        super(movedPiece, destination, source);
-        this.attackedPiece = attackedPiece;
+    public KingAttackMove(Board board, Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(board, movedPiece, destination, source, attackedPiece);
     }
 }

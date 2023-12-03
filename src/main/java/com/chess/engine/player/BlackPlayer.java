@@ -13,7 +13,10 @@ import java.util.List;
 import static com.chess.engine.board.Board.BOARD_SIZE;
 
 public class BlackPlayer extends Player{
-    public BlackPlayer(Board board, List<Piece> availablePieces, List<Move> availableMoves, List<Move> opponentAvailableMoves) {
+    public BlackPlayer(Board board,
+                       List<Piece> availablePieces,
+                       List<Move> availableMoves,
+                       List<Move> opponentAvailableMoves) {
         super(board, availablePieces, availableMoves, opponentAvailableMoves);
     }
 
