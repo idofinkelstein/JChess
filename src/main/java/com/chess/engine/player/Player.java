@@ -18,7 +18,7 @@ public abstract class Player {
 
     protected final Board board;
 
-    private final boolean isIncheck;
+    private final boolean isInCheck;
     protected List<Piece> availablePieces;
     protected List<Move> availableMoves;
     protected List<Move> opponentAvailableMoves;
@@ -36,8 +36,10 @@ public abstract class Player {
         this.opponentAvailableMoves = opponentAvailableMoves;
         this.king = establishKing();
         this.previousMoves = new ArrayList<>();
-        this.isIncheck = isKingInCheck();
+        this.isInCheck = !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
     }
+    public abstract Player getOpponent();
+    public abstract Color getColor();
 
     public static List<Move> calculateAttackOnTile(Point position, List<Move> moves) {
         List<Move> movesOnTile = new ArrayList<>();
@@ -69,7 +71,7 @@ public abstract class Player {
 
     public List<Move> calculateAvailableMoves() {
         MoveVisitor moveVisitor = new MoveVisitorImpl();
-        List<Move> moves = new ArrayList<Move>();
+        List<Move> moves = new ArrayList<>();
 
         for (Piece piece : availablePieces) {
             moves.addAll(piece.accept(moveVisitor, board));
@@ -78,27 +80,31 @@ public abstract class Player {
     }
 
     public boolean isInCheck() {
-        return false;
+        return isInCheck;
     }
 
     public boolean isCheckmate() {
+        return isInCheck && !hasEscapeMove();
+    }
+    public boolean isInStalemate() {
+        return !isInCheck && !hasEscapeMove();
+    }
+
+    private boolean hasEscapeMove() {
+        for (Move move : availableMoves) {
+            MoveAttempt moveAttempt = makeMove(move, board);
+            if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+                return true;
+            }
+        }
         return false;
     }
 
-    public boolean isInStalemate() {
-        return false;
-    }
 
     public boolean isMoveLegal(Move move) {
         return availableMoves.contains(move);
     }
 
-    public boolean isKingInCheck() {
-        return !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
-    }
-
-    public abstract Player getOpponent();
-    public abstract Color getColor();
 
     public MoveAttempt makeMove(Move move, Board board) {
 

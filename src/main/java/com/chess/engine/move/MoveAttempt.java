@@ -9,6 +9,7 @@ public class MoveAttempt {
     @Getter
     private final Board board;
     private final Move move;
+    @Getter
     private final MoveStatus moveStatus;
 
     public MoveAttempt(Board board, Move move, MoveStatus moveStatus) {
