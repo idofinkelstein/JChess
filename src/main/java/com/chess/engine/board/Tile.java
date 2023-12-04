@@ -10,7 +10,6 @@ import java.awt.*;
 @Setter
 public abstract class Tile {
 
-
     protected final Point position;
     protected final Piece piece;
 
@@ -26,6 +25,6 @@ public abstract class Tile {
     public int getYPosition() {
         return position.y;
     }
-    abstract boolean isOccupied();
-    abstract boolean isEmpty();
+    public abstract boolean isOccupied();
+
 }

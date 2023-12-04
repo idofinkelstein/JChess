@@ -13,12 +13,7 @@ public class OccupiedTile extends Tile{
     }
 
     @Override
-    boolean isOccupied() {
+    public boolean isOccupied() {
         return true;
-    }
-
-    @Override
-    boolean isEmpty() {
-        return false;
     }
 }

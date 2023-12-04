@@ -1,13 +1,19 @@
 package com.chess.engine.piece;
 
+import com.chess.engine.board.Board;
+import com.chess.engine.move.Move;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public abstract class Piece {
 
-    protected final Point position;
+    @Setter
+    protected Point position;
     protected final Color color;
 
     protected Piece(Point position, Color color) {
@@ -15,4 +21,5 @@ public abstract class Piece {
         this.color = color;
     }
 
+    public abstract List<Move> accept(MoveVisitor moveVisitor, Board board);
 }

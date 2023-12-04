@@ -8,13 +8,7 @@ public class EmptyTile extends Tile{
     }
 
     @Override
-    boolean isOccupied() {
+    public boolean isOccupied() {
         return false;
     }
-
-    @Override
-    boolean isEmpty() {
-        return true;
-    }
-
 }
