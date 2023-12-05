@@ -10,10 +10,9 @@ import lombok.Getter;
 
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
 
@@ -22,6 +21,9 @@ public class Board {
     private  Player activePlayer;
     private final BlackPlayer blackPlayer;
     private final WhitePlayer whitePlayer;
+
+    @Getter
+    private final List<Move> availableMoves;
 
     private Board(BoardBuilder builder) {
         for (int x = 0; x < BOARD_SIZE; x++) {
@@ -41,6 +43,7 @@ public class Board {
 
         List<Move> whiteMoves = calculateAvailableMoves(whitePieces);
         List<Move> blackMoves = calculateAvailableMoves(blackPieces);
+        availableMoves = Stream.concat(blackMoves.stream(), whiteMoves.stream()).toList();
 
         whitePlayer = new WhitePlayer(this, whitePieces, whiteMoves, blackMoves);
         blackPlayer = new BlackPlayer(this, blackPieces, blackMoves, whiteMoves);
@@ -95,6 +98,10 @@ public class Board {
         for (Piece piece : pieces) {
             availableMoves.addAll(piece.accept(moveVisitor, this));
         }
+
+        // TODO consider use forEach loop instead of for loop and remember to delete this line
+//        pieces.forEach(piece -> availableMoves.addAll(piece.accept(moveVisitor, this)));
+
         return availableMoves;
     }
 

@@ -65,7 +65,7 @@ public class MoveVisitorImpl implements MoveVisitor {
                 Point newPosition = new Point(newX, newY);
                 Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
-                if (!pieceOnTile.getColor().equals(pawn.getColor())) { // There is enemy piece
+                if (!pieceOnTile.getColor().equals(pawn.getColor())) { // There is an enemy piece
                     Move move = new PawnAttackMove(board, pawn, newPosition, pawn.getPosition(), pieceOnTile);
                     moves.add(move);
                 }
@@ -87,10 +87,10 @@ public class MoveVisitorImpl implements MoveVisitor {
             if (isMoveValid(newX, newY)) {
 
                 Point newPosition = new Point(newX, newY);
-                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+                if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
-                    if (!pieceOnTile.getColor().equals(knight.getColor())) { // There is enemy piece on the tile
+                    if (!pieceOnTile.getColor().equals(knight.getColor())) { // There is an enemy piece on the tile
                         Move attackMove = new KnightAttackMove(board, knight, newPosition, knight.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
@@ -116,10 +116,10 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             while (isMoveValid(newX, newY)) {
                 Point newPosition = new Point(newX, newY);
-                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+                if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
-                    if (!pieceOnTile.getColor().equals(bishop.getColor())) { // There is enemy piece on the tile
+                    if (!pieceOnTile.getColor().equals(bishop.getColor())) { // There is an enemy piece on the tile
                         Move attackMove = new BishopAttackMove(board, bishop,  newPosition, bishop.getPosition(), pieceOnTile);
                         moves.add(attackMove);
                     }
@@ -148,10 +148,10 @@ public class MoveVisitorImpl implements MoveVisitor {
             while (isMoveValid(newX, newY)) {
 
                 Point newPosition = new Point(newX, newY);
-                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+                if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
 
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
-                    if (!pieceOnTile.getColor().equals(rook.getColor())) { // There is enemy piece on the tile
+                    if (!pieceOnTile.getColor().equals(rook.getColor())) { // There is an enemy piece on the tile
 
                         Move attackMove = new RookAttackMove(board, rook,  newPosition, rook.getPosition(), pieceOnTile);
                         moves.add(attackMove);
@@ -181,10 +181,10 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             while (isMoveValid(newX, newY)) {
                 Point newPosition = new Point(newX, newY);
-                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+                if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
 
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
-                    if (!pieceOnTile.getColor().equals(queen.getColor())) { // There is enemy piece on the tile
+                    if (!pieceOnTile.getColor().equals(queen.getColor())) { // There is an enemy piece on the tile
 
                         Move attackMove = new QueenAttackMove(board, queen,  newPosition, queen.getPosition(), pieceOnTile);
                         moves.add(attackMove);
@@ -213,9 +213,9 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             if (isMoveValid(newX, newY)) {
                 Point newPosition = new Point(newX, newY);
-                if (board.getTile(newX, newY).isOccupied()) { // There is piece on the tile
+                if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
-                    if (!pieceOnTile.getColor().equals(king.getColor())) { // There is enemy piece on the tile
+                    if (!pieceOnTile.getColor().equals(king.getColor())) { // There is an enemy piece on the tile
 
                         Move attackMove = new KingAttackMove(board, king,  newPosition, king.getPosition(), pieceOnTile);
                         moves.add(attackMove);
