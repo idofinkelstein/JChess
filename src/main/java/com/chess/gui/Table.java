@@ -14,7 +14,7 @@ import static com.chess.engine.board.Board.*;
 public class Table {
 
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800, 800);
-    public static final Dimension BOARD_PANEL_DIMENSION = new Dimension(350, 40);
+    public static final Dimension BOARD_PANEL_DIMENSION = new Dimension(350, 400);
     public static final Dimension TILE_PANEL_DIMENSION = new Dimension(35, 35);
     private final JFrame gameFrame;
     private final BoardPanel boardPanel;
@@ -30,9 +30,6 @@ public class Table {
         populateMenu(tableMenuBar);
         this.gameFrame.setJMenuBar(tableMenuBar);
 
-//        this.gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        this.gameFrame.setResizable(false);
-//        this.gameFrame.setLocationRelativeTo(null);
 
         this.gameFrame.setVisible(true);
     }
@@ -53,6 +50,18 @@ public class Table {
             }
         });
         fileMenu.add(openPGN);
+
+        final JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
+                System.out.println("Exit JChess!");
+
+            }
+        });
+        fileMenu.add(exitMenuItem);
+
         return fileMenu;
     }
 
