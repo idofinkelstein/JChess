@@ -5,18 +5,20 @@ import com.chess.engine.board.Tile;
 import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.move.MoveFactory;
+import com.chess.engine.piece.MoveVisitor;
+import com.chess.engine.piece.MoveVisitorImpl;
 import com.chess.engine.piece.Piece;
+import com.chess.engine.piece.PieceType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import static com.chess.engine.board.Board.*;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
@@ -33,13 +35,21 @@ public class Table {
     private Tile sourceTile;
     private Tile destinationTile;
     private Piece sourcePiece;
+    private boolean highlightLegalMoves = false;
+
+    private final TakenPiecesPanel takenPiecesPanel;
+
+    private MoveLog moveLog;
 
     public Table() {
         this.board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
+        this.moveLog = new MoveLog();
         this.gameFrame = new JFrame("Chess");
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.boardPanel = new BoardPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
+        this.gameFrame.add(takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         final JMenuBar tableMenuBar = new JMenuBar();
 
@@ -52,6 +62,7 @@ public class Table {
 
     private void populateMenu(JMenuBar tableMenuBar) {
         tableMenuBar.add(createFileMenu());
+        tableMenuBar.add(createPreferenceMenu());
     }
 
     private JMenu createFileMenu() {
@@ -79,6 +90,23 @@ public class Table {
         fileMenu.add(exitMenuItem);
 
         return fileMenu;
+    }
+
+    private JMenu createPreferenceMenu() {
+        final JMenu preferenceMenu = new JMenu("Preferences");
+
+        final JCheckBoxMenuItem highLightCheckBoxMenuItem = new JCheckBoxMenuItem("Highlight Legal Moves", false);
+        highLightCheckBoxMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Highlight Legal Moves!");
+                highlightLegalMoves = highLightCheckBoxMenuItem.isSelected();
+
+            }
+        });
+        preferenceMenu.add(highLightCheckBoxMenuItem);
+
+        return preferenceMenu;
     }
 
     private class BoardPanel extends JPanel {
@@ -151,6 +179,10 @@ public class Table {
                             MoveAttempt moveAttempt = board.getCurrentPlayer().makeMove(move, board);
                             if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
                                 board = moveAttempt.getBoard();
+                                moveLog.addMove(move);
+                                takenPiecesPanel.addTakenPiece(moveLog);
+                            } else {
+                                System.out.println(moveAttempt.getMoveStatus().toString());
                             }
                             System.out.println("now clicking on destination tile");
                             sourceTile = null;
@@ -168,12 +200,13 @@ public class Table {
 
                 @Override
                 public void mousePressed(MouseEvent e) {
-
+//                    sourcePiece = board.getTile(tileRowId, tileColumnId).getPiece();
+//                    System.out.println(sourcePiece);
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-
+//                    sourcePiece.setPosition(e.getX(), e.getY());
                 }
 
                 @Override
@@ -186,14 +219,59 @@ public class Table {
 
                 }
             });
+            addMouseMotionListener(new MouseMotionListener() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+//                    if (sourcePiece != null) {
+//                        int x = e.getX();
+//                        int y = e.getY();
+//                        sourcePiece.setPosition(new Point(x, y));
+//                        repaint();
+//
+//                    }
+//                    if (isLeftMouseButton(e)) {
+//                        if (sourceTile == null) {
+//                            sourceTile = board.getTile(tileRowId, tileColumnId);
+//                            sourcePiece = sourceTile.getPiece();
+//                            if (sourcePiece == null) {
+//                                System.out.println("no piece here");
+//                                sourceTile = null;
+//                            } else {
+//                                System.out.println(sourcePiece.toString() + " is about to move");
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        destinationTile = board.getTile(tileRowId, tileColumnId);
+//                        Move move = MoveFactory.constructMove(board, destinationTile.getPosition(),
+//                                sourceTile.getPosition());
+//                        MoveAttempt moveAttempt = board.getCurrentPlayer().makeMove(move, board);
+//                        if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+//                            board = moveAttempt.getBoard();
+//                        }
+//                        else {
+//                            System.out.println(moveAttempt.getMoveStatus().toString());
+//                        }
+//
+//                        sourceTile = null;
+//                        destinationTile = null;
+//                        sourcePiece = null;
+//                    }
+                }
+
+                @Override
+                public void mouseMoved(MouseEvent e) {
+
+                }
+            });
             validate();
         }
 
         private void assignPanelColor() {
             if ((((tileRowId & 1) == 0 && (tileColumnId & 1) == 0) || ((tileRowId & 1) != 0 && (tileColumnId & 1) != 0))) {
-                setBackground(Color.WHITE);
+                setBackground(Color.decode("#F8DE7E"));
             } else {
-                setBackground(Color.DARK_GRAY);
+                setBackground(Color.decode("#7E481C"));
             }
         }
 
@@ -211,10 +289,51 @@ public class Table {
             }
         }
 
+        private void highlightLegalMoves(Board board) {
+            if (highlightLegalMoves) {
+                for (Move move : pieceMoves(board)) {
+                    if (move.getDestination().equals(getTilePosition())) {
+                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
+                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor() && move.getMovedPiece().getPieceType() != PieceType.KING)
+                        || (move.getMovedPiece().getPieceType() == PieceType.KING && board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK)) {
+                            try {
+                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
+                                add(new JLabel(new ImageIcon(image)));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        else {
+                            try {
+                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
+                                add(new JLabel(new ImageIcon(image)));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        private Point getTilePosition() {
+            return new Point(tileRowId, tileColumnId);
+        }
+
+        private List<Move> pieceMoves(Board board) {
+            if (sourcePiece != null && sourcePiece.getColor() == board.getCurrentPlayer().getColor()) {
+                MoveVisitor moveVisitor = new MoveVisitorImpl();
+                return sourcePiece.accept(moveVisitor, board);
+            }
+            return Collections.emptyList();
+        }
+
         public void drawTile(Board board) {
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignPanelColor();
             assignTilePieceIcon(board);
+            highlightLegalMoves(board);
             validate();
             repaint();
         }

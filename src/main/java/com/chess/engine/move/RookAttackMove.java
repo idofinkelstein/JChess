@@ -8,7 +8,7 @@ import java.awt.*;
 
 @EqualsAndHashCode(callSuper = true)
 public class RookAttackMove extends AttackMove {
-    public RookAttackMove(Board board, Piece movedPiece, Point source, Point destination, Piece attackedPiece) {
-        super(board, movedPiece, source, destination, attackedPiece);
+    public RookAttackMove(Board board, Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(board, movedPiece, destination, source, attackedPiece);
     }
 }

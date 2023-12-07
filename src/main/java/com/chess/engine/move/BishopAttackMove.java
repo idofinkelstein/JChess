@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class BishopAttackMove extends AttackMove {
-    public BishopAttackMove(Board board, Piece movedPiece, Point source, Point destination, Piece attackedPiece) {
-        super(board, movedPiece, source, destination, attackedPiece);
+    public BishopAttackMove(Board board, Piece movedPiece, Point destination, Point source, Piece attackedPiece) {
+        super(board, movedPiece, destination, source, attackedPiece);
     }
 
 }

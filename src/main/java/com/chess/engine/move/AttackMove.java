@@ -28,4 +28,9 @@ public abstract class AttackMove extends Move{
         builder.placePiece(movedPiece);
         return builder.build();
     }
+
+    @Override
+    public Piece getAttackedPiece() {
+        return attackedPiece;
+    }
 }

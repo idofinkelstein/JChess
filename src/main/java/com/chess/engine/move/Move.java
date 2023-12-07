@@ -6,6 +6,7 @@ import com.chess.engine.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -37,5 +38,9 @@ public abstract class Move {
         builder.placePiece(movedPiece);
 
         return builder.build();
+    }
+
+    public Piece getAttackedPiece() {
+        return null;
     }
 }

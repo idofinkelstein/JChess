@@ -19,5 +19,10 @@ public class Knight extends Piece {
     public List<Move> accept(MoveVisitor moveVisitor, Board board) {
         return moveVisitor.visit(this, board);
     }
+
+    @Override
+    public PieceType getPieceType() {
+        return PieceType.KNIGHT;
+    }
 }
 

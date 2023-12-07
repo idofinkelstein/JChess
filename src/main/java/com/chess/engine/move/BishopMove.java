@@ -9,7 +9,7 @@ import java.awt.*;
 @EqualsAndHashCode(callSuper = true)
 public class BishopMove extends Move {
 
-    public BishopMove(Board board, Piece movedPiece, Point source, Point destination) {
+    public BishopMove(Board board, Piece movedPiece, Point destination, Point source) {
         super(board, movedPiece, destination, source);
     }
 }
