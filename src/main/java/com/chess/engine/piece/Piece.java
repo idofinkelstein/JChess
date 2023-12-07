@@ -22,4 +22,10 @@ public abstract class Piece {
     }
 
     public abstract List<Move> accept(MoveVisitor moveVisitor, Board board);
+    public abstract PieceType getPieceType();
+
+
+    public int getPieceValue() {
+        return getPieceType().getPieceValue();
+    }
 }

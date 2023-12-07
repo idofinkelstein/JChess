@@ -6,6 +6,7 @@ import com.chess.engine.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -27,15 +28,19 @@ public abstract class Move {
     public Board makeMove() {
         Board.BoardBuilder builder = new Board.BoardBuilder();
         Player activePlayer = board.getCurrentPlayer();
-        // Need to copy the pieces to the new board and update the board accordingly.
-        // that means place the piece on new tile and remove it from the old tile
+
         builder.setActivePlayer(activePlayer.getOpponent().getColor())
                 .placePiecesExcluding(board.getCurrentPlayer()
                         .getOpponent().getAvailablePieces(), null)
                 .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece));
+
         movedPiece.setPosition(destination);
         builder.placePiece(movedPiece);
 
         return builder.build();
+    }
+
+    public Piece getAttackedPiece() {
+        return null;
     }
 }
