@@ -29,4 +29,9 @@ public class BlackPlayer extends Player{
     public Color getColor() {
         return Color.BLACK;
     }
+
+    @Override
+    public List<Move> calculateCastlingMoves() {
+        return new ArrayList<>();
+    }
 }

@@ -27,4 +27,8 @@ public class Rook extends Piece{
     public String toString() {
         return PieceType.ROOK.toString();
     }
+
+    public boolean isFirstMove(){
+        return false;
+    }
 }

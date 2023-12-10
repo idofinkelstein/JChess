@@ -1,6 +1,7 @@
 package com.chess.engine.board;
 
 import com.chess.engine.move.Move;
+import com.chess.engine.move.MoveUtils;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 import com.chess.engine.player.BlackPlayer;
@@ -18,7 +19,7 @@ public class Board {
 
     public static final int BOARD_SIZE = 8;
     private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
-    private  Player activePlayer;
+    private Player activePlayer;
     private final BlackPlayer blackPlayer;
     private final WhitePlayer whitePlayer;
 
@@ -32,8 +33,7 @@ public class Board {
                 Point position = new Point(x, y);
                 if (builder.PieceOnTileMap.containsKey(position)) {
                     gameBoard[x][y] = new OccupiedTile(x, y, builder.PieceOnTileMap.get(position));
-                }
-                else {
+                } else {
                     gameBoard[x][y] = new EmptyTile(x, y, null);
                 }
             }
@@ -43,12 +43,43 @@ public class Board {
 
         List<Move> whiteMoves = calculateAvailableMoves(whitePieces);
         List<Move> blackMoves = calculateAvailableMoves(blackPieces);
+//        List<Move> castleMoves = calculateCastleMoves();
         availableMoves = Stream.concat(blackMoves.stream(), whiteMoves.stream()).toList();
 
         whitePlayer = new WhitePlayer(this, whitePieces, whiteMoves, blackMoves);
         blackPlayer = new BlackPlayer(this, blackPieces, blackMoves, whiteMoves);
 
-        activePlayer = (builder.getActivePlayer() == Color.WHITE)? whitePlayer : blackPlayer;
+        activePlayer = (builder.getActivePlayer() == Color.WHITE) ? whitePlayer : blackPlayer;
+    }
+
+    private List<Move> calculateCastleMoves() {
+        // Conditions:
+        // 1. King and rook hasn't moved yet
+        // 2. King isn't threatened currently
+        // 3. King will not be threatened after castling ends
+        // 4. King can't cross tiles under threat
+        // 5. There is a clear path between king and rook
+
+        King whiteKing = whitePlayer.getKing();
+        King blackKing = blackPlayer.getKing();
+
+        // calculate white king's castle moves
+        if (whiteKing.isFirstMove()
+                && !whitePlayer.isInCheck()
+                && getTile(7, 7).isOccupied()
+                && getTile(7, 7).getPiece() instanceof Rook rook
+                && rook.isFirstMove()) {                                                                             // rook is first move
+
+            Tile involvedTile1 = getTile(7, 5);
+            Tile involvedTile2 = getTile(7, 6);
+            if (!involvedTile1.isOccupied() && Player.calculateAttackOnTile(involvedTile1.getPosition(), blackPlayer.getAvailableMoves()).isEmpty()
+                    && !involvedTile2.isOccupied() && Player.calculateAttackOnTile(involvedTile2.getPosition(), blackPlayer.getAvailableMoves()).isEmpty()) {
+                System.out.println();
+            }
+
+
+        }
+        return null;
     }
 
     private static String prettyPrint(Tile tile) {
@@ -59,6 +90,7 @@ public class Board {
         }
         return "-";
     }
+
     public Tile getTile(int x, int y) {
         return gameBoard[x][y];
     }
@@ -70,6 +102,7 @@ public class Board {
     public Player getWhitePlayer() {
         return whitePlayer;
     }
+
     public Player getCurrentPlayer() {
         return activePlayer;
     }

@@ -1,13 +1,18 @@
 package com.chess.engine.move;
 
+import com.chess.engine.board.Board;
 import com.chess.engine.piece.Piece;
 
-public abstract class CastlingMove {
-    private final Piece king;
-    private final Piece rook;
+import java.awt.*;
 
-    public CastlingMove(Piece king, Piece rook) {
-        this.king = king;
+public abstract class CastlingMove extends Move{
+    // king piece and king position are extended from base class (Move)
+    private final Piece rook;
+    private final Point rookDestination;
+
+    public CastlingMove(Board board, Piece king, Piece rook, Point kingDestination, Point rookDestination) {
+        super(board, king, kingDestination, king.getPosition());
         this.rook = rook;
+        this.rookDestination = rookDestination;
     }
 }

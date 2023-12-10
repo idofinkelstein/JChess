@@ -73,4 +73,34 @@ public class MoveUtils {
     };
 
     public static final Point[] KING_POSSIBLE_MOVES = QUEEN_POSSIBLE_MOVES;
+
+    public static final Point[] WHITE_KING_SIDE_CASTLE_MOVE_TILES = {
+            new Point(7, 4),
+            new Point(7, 5),
+            new Point(7, 6),
+            new Point(7, 7),
+    };
+
+    public static final Point[] WHITE_QUEEN_SIDE_CASTLE_MOVE_TILES = {
+            new Point(7, 4),
+            new Point(7, 3),
+            new Point(7, 2),
+            new Point(7, 1),
+            new Point(7, 0),
+    };
+
+    public static final Point[] BLACK_KING_SIDE_CASTLE_MOVE_TILES = {
+            new Point(0, 4),
+            new Point(0, 5),
+            new Point(0, 6),
+            new Point(0, 7),
+    };
+
+    public static final Point[] BLACK_QUEEN_SIDE_CASTLE_MOVE_TILES = {
+            new Point(0, 4),
+            new Point(0, 3),
+            new Point(0, 2),
+            new Point(0, 1),
+            new Point(0, 0),
+    };
 }

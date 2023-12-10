@@ -25,4 +25,8 @@ public class King extends Piece {
     public String toString() {
         return PieceType.KING.toString();
     }
+
+    public boolean isFirstMove(){
+        return false;
+    }
 }

@@ -8,7 +8,6 @@ import com.chess.engine.move.MoveFactory;
 import com.chess.engine.piece.MoveVisitor;
 import com.chess.engine.piece.MoveVisitorImpl;
 import com.chess.engine.piece.Piece;
-import com.chess.engine.piece.PieceType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -38,6 +37,7 @@ public class Table {
     private boolean highlightLegalMoves = false;
 
     private final TakenPiecesPanel takenPiecesPanel;
+    private final GameHistoryPanel gameHistoryPanel;
 
     private MoveLog moveLog;
 
@@ -49,7 +49,9 @@ public class Table {
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.boardPanel = new BoardPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
+        this.gameHistoryPanel = new GameHistoryPanel();
         this.gameFrame.add(takenPiecesPanel, BorderLayout.WEST);
+        this.gameFrame.add(gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         final JMenuBar tableMenuBar = new JMenuBar();
 
@@ -180,7 +182,6 @@ public class Table {
                             if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
                                 board = moveAttempt.getBoard();
                                 moveLog.addMove(move);
-                                takenPiecesPanel.addTakenPiece(moveLog);
                             } else {
                                 System.out.println(moveAttempt.getMoveStatus().toString());
                             }
@@ -189,9 +190,12 @@ public class Table {
                             destinationTile = null;
                             sourcePiece = null;
                         }
+
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(board, moveLog);
+                                takenPiecesPanel.addTakenPiece(moveLog);
                                 boardPanel.drawBoard(board);
                             }
                         });
@@ -293,18 +297,19 @@ public class Table {
             if (highlightLegalMoves) {
                 for (Move move : pieceMoves(board)) {
                     if (move.getDestination().equals(getTilePosition())) {
-                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
-                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor() && move.getMovedPiece().getPieceType() != PieceType.KING)
-                        || (move.getMovedPiece().getPieceType() == PieceType.KING && board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK)) {
+                        Tile destinationTile = board.getTile(getTilePosition().x, getTilePosition().y);
+//                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
+//                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor())) {
+//                            try {
+//                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
+//                                add(new JLabel(new ImageIcon(image)));
+//                            } catch (IOException e) {
+//                                throw new RuntimeException(e);
+//                            }
+//                        }
+                        if (!destinationTile.isOccupied() /*&& board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK*/) {
                             try {
-                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
-                                add(new JLabel(new ImageIcon(image)));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        else {
-                            try {
+                                System.out.println("green dot on tile" + getTilePosition());
                                 final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
                                 add(new JLabel(new ImageIcon(image)));
                             } catch (IOException e) {
