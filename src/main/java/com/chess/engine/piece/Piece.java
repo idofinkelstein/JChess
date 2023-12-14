@@ -17,7 +17,7 @@ public abstract class Piece {
     @Setter
     protected Point position;
     protected final Color color;
-    private boolean isFirstMove;
+    private final boolean isFirstMove;
 
     protected Piece(Point position, Color color, boolean isFirstMove) {
         this.position = position;

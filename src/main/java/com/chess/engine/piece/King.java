@@ -26,10 +26,6 @@ public class King extends Piece {
         return PieceType.KING.toString();
     }
 
-    public boolean isFirstMove(){
-        return true;
-    }
-
     @Override
     public Piece movePiece(Point destination) {
         return new King(destination, getColor(), false);
