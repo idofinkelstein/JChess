@@ -2,9 +2,11 @@ package com.chess.gui;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Tile;
+import com.chess.engine.move.CastlingMove;
 import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.move.MoveFactory;
+import com.chess.engine.piece.King;
 import com.chess.engine.piece.MoveVisitor;
 import com.chess.engine.piece.MoveVisitorImpl;
 import com.chess.engine.piece.Piece;
@@ -16,6 +18,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -307,13 +310,26 @@ public class Table {
 //                                throw new RuntimeException(e);
 //                            }
 //                        }
-                        if (!destinationTile.isOccupied() /*&& board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK*/) {
-                            try {
-                                System.out.println("green dot on tile" + getTilePosition());
-                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
-                                add(new JLabel(new ImageIcon(image)));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                        if (!destinationTile.isOccupied() && board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+                            if (move instanceof CastlingMove) {
+                                try {
+                                    System.out.println("green dot on tile" + getTilePosition());
+                                    final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//blue_dot.png"));
+                                    add(new JLabel(new ImageIcon(image)));
+                                }
+                                catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            else {
+                                try {
+                                    System.out.println("green dot on tile" + getTilePosition());
+                                    final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
+                                    add(new JLabel(new ImageIcon(image)));
+                                }
+                                catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                         }
 
@@ -327,11 +343,15 @@ public class Table {
         }
 
         private List<Move> pieceMoves(Board board) {
+            List<Move> pieceMoves = new ArrayList<>();
             if (sourcePiece != null && sourcePiece.getColor() == board.getCurrentPlayer().getColor()) {
                 MoveVisitor moveVisitor = new MoveVisitorImpl();
-                return sourcePiece.accept(moveVisitor, board);
+                pieceMoves.addAll(sourcePiece.accept(moveVisitor, board));
+                if (sourcePiece instanceof King) {
+                    pieceMoves.addAll(board.getCurrentPlayer().calculateCastlingMoves());
+                }
             }
-            return Collections.emptyList();
+            return pieceMoves;
         }
 
         public void drawTile(Board board) {

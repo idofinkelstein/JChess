@@ -53,36 +53,6 @@ public class Board {
         activePlayer = (builder.getActivePlayer() == Color.WHITE) ? whitePlayer : blackPlayer;
     }
 
-    private List<Move> calculateCastleMoves() {
-        // Conditions:
-        // 1. King and rook hasn't moved yet
-        // 2. King isn't threatened currently
-        // 3. King will not be threatened after castling ends
-        // 4. King can't cross tiles under threat
-        // 5. There is a clear path between king and rook
-
-        King whiteKing = whitePlayer.getKing();
-        King blackKing = blackPlayer.getKing();
-
-        // calculate white king's castle moves
-        if (whiteKing.isFirstMove()
-                && !whitePlayer.isInCheck()
-                && getTile(7, 7).isOccupied()
-                && getTile(7, 7).getPiece() instanceof Rook rook
-                && rook.isFirstMove()) {                                                                             // rook is first move
-
-            Tile involvedTile1 = getTile(7, 5);
-            Tile involvedTile2 = getTile(7, 6);
-            if (!involvedTile1.isOccupied() && Player.calculateAttackOnTile(involvedTile1.getPosition(), blackPlayer.getAvailableMoves()).isEmpty()
-                    && !involvedTile2.isOccupied() && Player.calculateAttackOnTile(involvedTile2.getPosition(), blackPlayer.getAvailableMoves()).isEmpty()) {
-                System.out.println();
-            }
-
-
-        }
-        return null;
-    }
-
     private static String prettyPrint(Tile tile) {
         if (tile.isOccupied()) {
             return (tile.getPiece().getColor() == Color.BLACK)

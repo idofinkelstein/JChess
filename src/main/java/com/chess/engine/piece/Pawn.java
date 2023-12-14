@@ -29,12 +29,12 @@ public class Pawn extends Piece {
         return PieceType.PAWN.toString();
     }
 
-    public boolean isFirstMove() {
-        if (color.equals(Color.WHITE) && getPosition().x == WHITE_PAWN_STARTING_ROW) {
-            return true;
-        } else
-            return color.equals(Color.BLACK) && getPosition().x == BLACK_PAWN_STARTING_ROW;
-    }
+//    public boolean isFirstMove() {
+//        if (color.equals(Color.WHITE) && getPosition().x == WHITE_PAWN_STARTING_ROW) {
+//            return true;
+//        } else
+//            return color.equals(Color.BLACK) && getPosition().x == BLACK_PAWN_STARTING_ROW;
+//    }
 
     @Override
     public Piece movePiece(Point destination) {
