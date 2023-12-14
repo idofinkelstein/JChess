@@ -33,9 +33,9 @@ public abstract class Player {
 
         this.board = board;
         this.availablePieces = availablePieces;
-        this.availableMoves = Stream.concat(availableMoves.stream(), calculateCastlingMoves().stream()).toList();
-        this.opponentAvailableMoves = opponentAvailableMoves;
         this.king = establishKing();
+        this.opponentAvailableMoves = opponentAvailableMoves;
+        this.availableMoves = Stream.concat(availableMoves.stream(), calculateCastlingMoves().stream()).toList();
         this.previousMoves = new ArrayList<>();
         this.isInCheck = !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
     }

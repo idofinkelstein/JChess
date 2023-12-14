@@ -7,8 +7,8 @@ import java.awt.*;
 import java.util.List;
 
 public class King extends Piece {
-    public King(Point position, Color color){
-        super(position, color);
+    public King(Point position, Color color, boolean isFirstMove){
+        super(position, color, isFirstMove);
     }
 
     @Override
@@ -27,6 +27,11 @@ public class King extends Piece {
     }
 
     public boolean isFirstMove(){
-        return false;
+        return true;
+    }
+
+    @Override
+    public Piece movePiece(Point destination) {
+        return new King(destination, getColor(), false);
     }
 }

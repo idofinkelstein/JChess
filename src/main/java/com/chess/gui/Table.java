@@ -42,8 +42,8 @@ public class Table {
     private MoveLog moveLog;
 
     public Table() {
-        this.board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
         this.moveLog = new MoveLog();
+        this.board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
         this.gameFrame = new JFrame("Chess");
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);

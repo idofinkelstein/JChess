@@ -10,8 +10,8 @@ import static com.chess.engine.move.MoveUtils.BLACK_PAWN_STARTING_ROW;
 import static com.chess.engine.move.MoveUtils.WHITE_PAWN_STARTING_ROW;
 
 public class Pawn extends Piece {
-    public Pawn(Point position, Color color){
-        super(position, color);
+    public Pawn(Point position, Color color, boolean isFirstMove){
+        super(position, color, isFirstMove);
     }
 
     @Override
@@ -34,5 +34,10 @@ public class Pawn extends Piece {
             return true;
         } else
             return color.equals(Color.BLACK) && getPosition().x == BLACK_PAWN_STARTING_ROW;
+    }
+
+    @Override
+    public Piece movePiece(Point destination) {
+        return new Pawn(destination, getColor(), false);
     }
 }

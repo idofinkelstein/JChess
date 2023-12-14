@@ -5,9 +5,9 @@ import com.chess.gui.Table;
 
 public class JChess {
     public static void main(String[] args) {
-        Board board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
+//        Board board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
 
-        System.out.println(board);
+//        System.out.println(board);
 
         Table table = new Table();
     }

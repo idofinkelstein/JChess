@@ -7,8 +7,8 @@ import java.awt.*;
 
 public abstract class CastlingMove extends Move{
     // king piece and king position are extended from base class (Move)
-    private final Piece rook;
-    private final Point rookDestination;
+    protected final Piece rook;
+    protected final Point rookDestination;
 
     public CastlingMove(Board board, Piece king, Piece rook, Point kingDestination, Point rookDestination) {
         super(board, king, kingDestination, king.getPosition());
