@@ -19,7 +19,7 @@ public class Board {
 
     public static final int BOARD_SIZE = 8;
     private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
-    private Player activePlayer;
+    private final Player activePlayer;
     private final BlackPlayer blackPlayer;
     private final WhitePlayer whitePlayer;
 
@@ -47,6 +47,7 @@ public class Board {
         whitePlayer = new WhitePlayer(this, whitePieces, whiteMoves, blackMoves);
         blackPlayer = new BlackPlayer(this, blackPieces, blackMoves, whiteMoves);
 
+        // Calculates all available moves after construction of the players because each player calculates its castling moves in the constructor
         availableMoves = Stream.concat(whitePlayer.getAvailableMoves().stream(), blackPlayer.getAvailableMoves().stream()).toList();
 
         activePlayer = (builder.getActivePlayer() == Color.WHITE) ? whitePlayer : blackPlayer;
