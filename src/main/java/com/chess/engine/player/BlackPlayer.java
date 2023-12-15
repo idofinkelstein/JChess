@@ -4,6 +4,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.move.CastlingMove;
 import com.chess.engine.move.KingSideCastling;
 import com.chess.engine.move.Move;
+import com.chess.engine.move.QueenSideCastling;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 
@@ -36,13 +37,23 @@ public class BlackPlayer extends Player{
         List<Move> castlingMoves = new ArrayList<>();
         King king = getKing();
 
-        if (king.isFirstMove() && !isInCheck() && board.getTile(0, 7).isOccupied()
-                && board.getTile(0, 7).getPiece() instanceof Rook rook
-                && rook.isFirstMove()) {
+        if (king.isFirstMove() && !isInCheck()) {
 
-            if (isTileSafeToGo(board.getTile(0, 6).getPosition()) && isTileSafeToGo(board.getTile(0, 5).getPosition())) {
+            if (board.getTile(0, 7).isOccupied()
+                    && board.getTile(0, 7).getPiece() instanceof Rook rook
+                    && rook.isFirstMove()
+                    && isTileSafeToGo(board.getTile(0, 6).getPosition())
+                    && isTileSafeToGo(board.getTile(0, 5).getPosition())) {
                 CastlingMove kingSideCastle = new KingSideCastling(board, king, board.getTile(0, 7).getPiece(), new Point(0, 6), new Point(0, 5));
                 castlingMoves.add(kingSideCastle);
+            }
+            if (board.getTile(0, 0).isOccupied()
+                    && board.getTile(0, 0).getPiece() instanceof Rook rook
+                    && rook.isFirstMove()
+                    && isTileSafeToGo(board.getTile(0, 3).getPosition())
+                    && isTileSafeToGo(board.getTile(0, 2).getPosition())) {
+                CastlingMove queenSideCastle = new QueenSideCastling(board, king, board.getTile(0, 0).getPiece(), new Point(0, 2), new Point(0, 3));
+                castlingMoves.add(queenSideCastle);
             }
         }
         return castlingMoves;

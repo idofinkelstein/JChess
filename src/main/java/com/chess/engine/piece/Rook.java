@@ -28,10 +28,6 @@ public class Rook extends Piece{
         return PieceType.ROOK.toString();
     }
 
-    public boolean isFirstMove(){
-        return true;
-    }
-
     @Override
     public Piece movePiece(Point destination) {
         return new Rook(destination, getColor(), false);
