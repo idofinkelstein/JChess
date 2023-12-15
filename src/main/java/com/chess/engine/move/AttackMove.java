@@ -24,8 +24,7 @@ public abstract class AttackMove extends Move{
                 .placePiecesExcluding(board.getCurrentPlayer()
                         .getOpponent().getAvailablePieces(), List.of(attackedPiece))
                 .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece));
-        movedPiece.setPosition(destination);
-        builder.placePiece(movedPiece);
+        builder.placePiece(movedPiece.movePiece(getDestination()));
         return builder.build();
     }
 

@@ -7,11 +7,12 @@ import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 import lombok.Getter;
 
+import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static com.chess.engine.board.Board.BOARD_SIZE;
+import java.util.stream.Stream;
 
 @Getter
 public abstract class Player {
@@ -32,14 +33,19 @@ public abstract class Player {
 
         this.board = board;
         this.availablePieces = availablePieces;
-        this.availableMoves = availableMoves;
-        this.opponentAvailableMoves = opponentAvailableMoves;
         this.king = establishKing();
+        this.opponentAvailableMoves = opponentAvailableMoves;
+        this.availableMoves = Stream.concat(availableMoves.stream(), calculateCastlingMoves().stream()).toList();
         this.previousMoves = new ArrayList<>();
         this.isInCheck = !calculateAttackOnTile(king.getPosition(), opponentAvailableMoves).isEmpty();
     }
     public abstract Player getOpponent();
     public abstract Color getColor();
+    public abstract List<Move> calculateCastlingMoves();
+
+    public boolean isTileSafeToGo(Point position) {
+        return !board.getTile(position.x, position.y).isOccupied() && calculateAttackOnTile(position, opponentAvailableMoves).isEmpty();
+    }
 
     public static List<Move> calculateAttackOnTile(Point position, List<Move> moves) {
         List<Move> movesOnTile = new ArrayList<>();
@@ -51,39 +57,11 @@ public abstract class Player {
         return movesOnTile;
     }
 
-    public List<Piece> calculateAvailablePieces() {
-        List<Piece> availablePieces = new ArrayList<>();
-
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-
-                if (board.getTile(i, j).isOccupied()) {
-                    Piece piece = board.getTile(i, j).getPiece();
-
-                    if (piece.getColor() == getColor()) {
-                        availablePieces.add(piece);
-                    }
-                }
-            }
-        }
-        return availablePieces;
-    }
-
-    public List<Move> calculateAvailableMoves() {
-        MoveVisitor moveVisitor = new MoveVisitorImpl();
-        List<Move> moves = new ArrayList<>();
-
-        for (Piece piece : availablePieces) {
-            moves.addAll(piece.accept(moveVisitor, board));
-        }
-        return moves;
-    }
-
     public boolean isInCheck() {
         return isInCheck;
     }
 
-    public boolean isCheckmate() {
+    public boolean isInCheckMate() {
         return isInCheck && !hasEscapeMove();
     }
     public boolean isInStalemate() {

@@ -2,13 +2,14 @@ package com.chess.gui;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Tile;
+import com.chess.engine.move.CastlingMove;
 import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.move.MoveFactory;
+import com.chess.engine.piece.King;
 import com.chess.engine.piece.MoveVisitor;
 import com.chess.engine.piece.MoveVisitorImpl;
 import com.chess.engine.piece.Piece;
-import com.chess.engine.piece.PieceType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,6 +18,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,18 +40,21 @@ public class Table {
     private boolean highlightLegalMoves = false;
 
     private final TakenPiecesPanel takenPiecesPanel;
+    private final GameHistoryPanel gameHistoryPanel;
 
     private MoveLog moveLog;
 
     public Table() {
-        this.board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
         this.moveLog = new MoveLog();
+        this.board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
         this.gameFrame = new JFrame("Chess");
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.boardPanel = new BoardPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
+        this.gameHistoryPanel = new GameHistoryPanel();
         this.gameFrame.add(takenPiecesPanel, BorderLayout.WEST);
+        this.gameFrame.add(gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         final JMenuBar tableMenuBar = new JMenuBar();
 
@@ -180,7 +185,6 @@ public class Table {
                             if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
                                 board = moveAttempt.getBoard();
                                 moveLog.addMove(move);
-                                takenPiecesPanel.addTakenPiece(moveLog);
                             } else {
                                 System.out.println(moveAttempt.getMoveStatus().toString());
                             }
@@ -189,9 +193,12 @@ public class Table {
                             destinationTile = null;
                             sourcePiece = null;
                         }
+
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(board, moveLog);
+                                takenPiecesPanel.addTakenPiece(moveLog);
                                 boardPanel.drawBoard(board);
                             }
                         });
@@ -293,22 +300,36 @@ public class Table {
             if (highlightLegalMoves) {
                 for (Move move : pieceMoves(board)) {
                     if (move.getDestination().equals(getTilePosition())) {
-                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
-                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor() && move.getMovedPiece().getPieceType() != PieceType.KING)
-                        || (move.getMovedPiece().getPieceType() == PieceType.KING && board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK)) {
-                            try {
-                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
-                                add(new JLabel(new ImageIcon(image)));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                        Tile destinationTile = board.getTile(getTilePosition().x, getTilePosition().y);
+//                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
+//                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor())) {
+//                            try {
+//                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
+//                                add(new JLabel(new ImageIcon(image)));
+//                            } catch (IOException e) {
+//                                throw new RuntimeException(e);
+//                            }
+//                        }
+                        if (!destinationTile.isOccupied() && board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+                            if (move instanceof CastlingMove) {
+                                try {
+                                    System.out.println("green dot on tile" + getTilePosition());
+                                    final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//blue_dot.png"));
+                                    add(new JLabel(new ImageIcon(image)));
+                                }
+                                catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
-                        }
-                        else {
-                            try {
-                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
-                                add(new JLabel(new ImageIcon(image)));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                            else {
+                                try {
+                                    System.out.println("green dot on tile" + getTilePosition());
+                                    final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
+                                    add(new JLabel(new ImageIcon(image)));
+                                }
+                                catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                         }
 
@@ -322,11 +343,15 @@ public class Table {
         }
 
         private List<Move> pieceMoves(Board board) {
+            List<Move> pieceMoves = new ArrayList<>();
             if (sourcePiece != null && sourcePiece.getColor() == board.getCurrentPlayer().getColor()) {
                 MoveVisitor moveVisitor = new MoveVisitorImpl();
-                return sourcePiece.accept(moveVisitor, board);
+                pieceMoves.addAll(sourcePiece.accept(moveVisitor, board));
+                if (sourcePiece instanceof King) {
+                    pieceMoves.addAll(board.getCurrentPlayer().calculateCastlingMoves());
+                }
             }
-            return Collections.emptyList();
+            return pieceMoves;
         }
 
         public void drawTile(Board board) {

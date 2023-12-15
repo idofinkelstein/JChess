@@ -7,8 +7,8 @@ import java.awt.*;
 import java.util.List;
 
 public class Queen extends Piece {
-    public Queen(Point position, Color color){
-        super(position, color);
+    public Queen(Point position, Color color, boolean isFirstMove){
+        super(position, color, isFirstMove);
     }
 
     @Override
@@ -19,6 +19,11 @@ public class Queen extends Piece {
     @Override
     public PieceType getPieceType() {
         return PieceType.QUEEN;
+    }
+
+    @Override
+    public Piece movePiece(Point destination) {
+        return new Queen(destination, getColor(), false);
     }
 
     @Override
