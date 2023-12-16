@@ -2,6 +2,7 @@ package com.chess.engine.piece;
 
 
 import com.chess.engine.board.Board;
+import com.chess.engine.board.Tile;
 import com.chess.engine.move.*;
 
 import java.awt.*;
@@ -46,6 +47,7 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + pawnPossibleJumpMove.y;
 
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied() && pawn.isFirstMove()) {
+                System.out.println("jump move");
                 Point newPosition = new Point(newX, newY);
                 Move move = new PawnJumpMove(board, pawn, newPosition, pawn.getPosition());
                 moves.add(move);
@@ -71,6 +73,31 @@ public class MoveVisitorImpl implements MoveVisitor {
                 }
             }
         }
+
+        // Calculate EnPassant Move
+        for (Point possibleEnPassant : PAWN_POSSIBLE_EN_PASSANT_MOVES) {
+
+            if (isMoveValid(currentX,currentY + possibleEnPassant.y)) {
+
+                Tile enPassantTile = board.getTile(currentX,currentY + possibleEnPassant.y);
+                Pawn enPassantPawn = board.getEnPassantPawn();
+                if (enPassantPawn != null && enPassantPawn == enPassantTile.getPiece()) {
+
+                    System.out.println("EnPassant");
+                    int xPosition = (pawn.getColor().equals(Color.WHITE) ? -1 : 1) + currentX;
+                    Point newPosition = new Point(xPosition, currentY + possibleEnPassant.y);
+
+                    Move move = new EnPassantMove(board, pawn, newPosition, pawn.getPosition(), enPassantPawn);
+                    moves.add(move);
+                }
+            }
+        }
+
+
+
+
+
+
         return Collections.unmodifiableList(moves);
     }
 

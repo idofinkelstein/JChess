@@ -71,6 +71,10 @@ public class MoveUtils {
             new Point(1, -1),
             new Point(1, 1),
     };
+    public static final Point[] PAWN_POSSIBLE_EN_PASSANT_MOVES = {
+            new Point(0, -1),
+            new Point(0, 1),
+    };
 
     public static final Point[] KING_POSSIBLE_MOVES = QUEEN_POSSIBLE_MOVES;
 

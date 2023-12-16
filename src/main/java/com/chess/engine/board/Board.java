@@ -22,6 +22,8 @@ public class Board {
     private final Player activePlayer;
     private final BlackPlayer blackPlayer;
     private final WhitePlayer whitePlayer;
+    @Getter
+    private Pawn enPassantPawn = null;
 
     @Getter
     private final List<Move> availableMoves;
@@ -40,6 +42,7 @@ public class Board {
         }
         List<Piece> whitePieces = calculateAvailablePieces(Color.WHITE);
         List<Piece> blackPieces = calculateAvailablePieces(Color.BLACK);
+        enPassantPawn = builder.getEnPassantPawn();
 
         List<Move> whiteMoves = calculateAvailableMoves(whitePieces);
         List<Move> blackMoves = calculateAvailableMoves(blackPieces);
@@ -127,6 +130,8 @@ public class Board {
         private final Map<Point, Piece> PieceOnTileMap = new HashMap<>();
         @Getter
         private Color activePlayer;
+        @Getter
+        private Pawn enPassantPawn;
 
 
         public Board build() {
@@ -190,6 +195,11 @@ public class Board {
                     PieceOnTileMap.put(piece.getPosition(), piece);
                 }
             }
+            return this;
+        }
+
+        public BoardBuilder setEnPassantPawn(Pawn pawn) {
+            enPassantPawn = pawn;
             return this;
         }
     }

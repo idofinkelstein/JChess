@@ -345,8 +345,15 @@ public class Table {
         private List<Move> pieceMoves(Board board) {
             List<Move> pieceMoves = new ArrayList<>();
             if (sourcePiece != null && sourcePiece.getColor() == board.getCurrentPlayer().getColor()) {
-                MoveVisitor moveVisitor = new MoveVisitorImpl();
-                pieceMoves.addAll(sourcePiece.accept(moveVisitor, board));
+                for (Move move : board.getCurrentPlayer().getAvailableMoves()) {
+                    if (move.getMovedPiece() == sourcePiece) {
+                        pieceMoves.add(move);
+                    }
+                }
+
+
+//                MoveVisitor moveVisitor = new MoveVisitorImpl();
+//                pieceMoves.addAll(sourcePiece.accept(moveVisitor, board));
                 if (sourcePiece instanceof King) {
                     pieceMoves.addAll(board.getCurrentPlayer().calculateCastlingMoves());
                 }
