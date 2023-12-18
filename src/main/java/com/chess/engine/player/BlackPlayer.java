@@ -7,12 +7,14 @@ import com.chess.engine.move.Move;
 import com.chess.engine.move.QueenSideCastling;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
+import com.sun.source.util.DocSourcePositions;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.chess.engine.board.Board.BOARD_SIZE;
+import static com.chess.engine.board.BoardUtils.POSITIONS;
 
 public class BlackPlayer extends Player{
     public BlackPlayer(Board board,
@@ -44,7 +46,7 @@ public class BlackPlayer extends Player{
                     && rook.isFirstMove()
                     && isTileSafeToGo(board.getTile(0, 6).getPosition())
                     && isTileSafeToGo(board.getTile(0, 5).getPosition())) {
-                CastlingMove kingSideCastle = new KingSideCastling(board, king, board.getTile(0, 7).getPiece(), new Point(0, 6), new Point(0, 5));
+                CastlingMove kingSideCastle = new KingSideCastling(board, king, board.getTile(0, 7).getPiece(), POSITIONS[0][6], POSITIONS[0][5]);
                 castlingMoves.add(kingSideCastle);
             }
             if (board.getTile(0, 0).isOccupied()
@@ -52,7 +54,7 @@ public class BlackPlayer extends Player{
                     && rook.isFirstMove()
                     && isTileSafeToGo(board.getTile(0, 3).getPosition())
                     && isTileSafeToGo(board.getTile(0, 2).getPosition())) {
-                CastlingMove queenSideCastle = new QueenSideCastling(board, king, board.getTile(0, 0).getPiece(), new Point(0, 2), new Point(0, 3));
+                CastlingMove queenSideCastle = new QueenSideCastling(board, king, board.getTile(0, 0).getPiece(), POSITIONS[0][2], POSITIONS[0][3]);
                 castlingMoves.add(queenSideCastle);
             }
         }

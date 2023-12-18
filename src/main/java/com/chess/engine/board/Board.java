@@ -13,6 +13,8 @@ import java.awt.Point;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.chess.engine.board.BoardUtils.POSITIONS;
+
 public class Board {
 
     public static final int BOARD_SIZE = 8;
@@ -33,7 +35,7 @@ public class Board {
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
 
-                Point position = new Point(x, y);
+                Point position = POSITIONS[x][y];
                 if (builder.PieceOnTileMap.containsKey(position)) {
                     gameBoard[x][y] = new OccupiedTile(x, y, builder.PieceOnTileMap.get(position));
                 } else {
@@ -143,38 +145,38 @@ public class Board {
         }
 
         public BoardBuilder populateMap() {
-            placePiece(new Rook(new Point(0, 0), Color.BLACK, true));
-            placePiece(new Knight(new Point(0, 1), Color.BLACK, true));
-            placePiece(new Bishop(new Point(0, 2), Color.BLACK, true));
-            placePiece(new Queen(new Point(0, 3), Color.BLACK, true));
-            placePiece(new King(new Point(0, 4), Color.BLACK, true));
-            placePiece(new Bishop(new Point(0, 5), Color.BLACK, true));
-            placePiece(new Knight(new Point(0, 6), Color.BLACK, true));
-            placePiece(new Rook(new Point(0, 7), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 0), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 1), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 2), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 3), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 4), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 5), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 6), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 7), Color.BLACK, true));
-            placePiece(new Pawn(new Point(6, 0), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 1), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 2), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 3), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 4), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 5), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 6), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 7), Color.WHITE, true));
-            placePiece(new Rook(new Point(7, 0), Color.WHITE, true));
-            placePiece(new Knight(new Point(7, 1), Color.WHITE, true));
-            placePiece(new Bishop(new Point(7, 2), Color.WHITE, true));
-            placePiece(new Queen(new Point(7, 3), Color.WHITE, true));
-            placePiece(new King(new Point(7, 4), Color.WHITE, true));
-            placePiece(new Bishop(new Point(7, 5), Color.WHITE, true));
-            placePiece(new Knight(new Point(7, 6), Color.WHITE, true));
-            placePiece(new Rook(new Point(7, 7), Color.WHITE, true));
+            placePiece(new Rook(POSITIONS[0][0], Color.BLACK, true));
+            placePiece(new Knight(POSITIONS[0][1], Color.BLACK, true));
+            placePiece(new Bishop(POSITIONS[0][2], Color.BLACK, true));
+            placePiece(new Queen(POSITIONS[0][3], Color.BLACK, true));
+            placePiece(new King(POSITIONS[0][4], Color.BLACK, true));
+            placePiece(new Bishop(POSITIONS[0][5], Color.BLACK, true));
+            placePiece(new Knight(POSITIONS[0][6], Color.BLACK, true));
+            placePiece(new Rook(POSITIONS[0][7], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][0], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][1], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][2], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][3], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][4], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][5], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][6], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][7], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[6][0], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][1], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][2], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][3], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][4], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][5], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][6], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][7], Color.WHITE, true));
+            placePiece(new Rook(POSITIONS[7][0], Color.WHITE, true));
+            placePiece(new Knight(POSITIONS[7][1], Color.WHITE, true));
+            placePiece(new Bishop(POSITIONS[7][2], Color.WHITE, true));
+            placePiece(new Queen(POSITIONS[7][3], Color.WHITE, true));
+            placePiece(new King(POSITIONS[7][4], Color.WHITE, true));
+            placePiece(new Bishop(POSITIONS[7][5], Color.WHITE, true));
+            placePiece(new Knight(POSITIONS[7][6], Color.WHITE, true));
+            placePiece(new Rook(POSITIONS[7][7], Color.WHITE, true));
             return this;
         }
 

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.chess.engine.board.Board.*;
+import static com.chess.engine.board.BoardUtils.POSITIONS;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
@@ -344,7 +345,7 @@ public class Table {
         }
 
         private Point getTilePosition() {
-            return new Point(tileRowId, tileColumnId);
+            return POSITIONS[tileRowId][tileColumnId];
         }
 
         private List<Move> pieceMoves(Board board) {
