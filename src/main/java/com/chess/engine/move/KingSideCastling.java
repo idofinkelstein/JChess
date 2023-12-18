@@ -12,4 +12,9 @@ public class KingSideCastling extends CastlingMove {
     public KingSideCastling(Board board, Piece king, Piece rook, Point kingDestination, Point rookDestination) {
         super(board,king, rook, kingDestination, rookDestination);
     }
+
+    @Override
+    public String toString() {
+        return "O-O";
+    }
 }
