@@ -9,6 +9,9 @@ import lombok.Getter;
 import java.awt.*;
 import java.util.List;
 
+import static com.chess.engine.move.MoveUtils.NUM_TO_LETTER_TEXT;
+import static com.chess.engine.move.MoveUtils.NUM_TO_NUM_TEXT;
+
 @EqualsAndHashCode
 @Getter
 public abstract class Move {
@@ -39,5 +42,10 @@ public abstract class Move {
 
     public Piece getAttackedPiece() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return NUM_TO_LETTER_TEXT.get(getDestination().y) + NUM_TO_NUM_TEXT.get(getDestination().x);
     }
 }
