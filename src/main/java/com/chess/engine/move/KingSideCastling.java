@@ -17,9 +17,4 @@ public class KingSideCastling extends CastlingMove {
     public String toString() {
         return "O-O";
     }
-
-    @Override
-    public String toString() {
-        return "O-O";
-    }
 }
