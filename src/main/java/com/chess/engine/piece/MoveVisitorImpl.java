@@ -47,7 +47,7 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + pawnPossibleJumpMove.y;
 
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied() && pawn.isFirstMove()) {
-                System.out.println("jump move");
+
                 Point newPosition = new Point(newX, newY);
                 Move move = new PawnJumpMove(board, pawn, newPosition, pawn.getPosition());
                 moves.add(move);
@@ -83,7 +83,6 @@ public class MoveVisitorImpl implements MoveVisitor {
                 Pawn enPassantPawn = board.getEnPassantPawn();
                 if (enPassantPawn != null && enPassantPawn == enPassantTile.getPiece()) {
 
-                    System.out.println("EnPassant");
                     int xPosition = (pawn.getColor().equals(Color.WHITE) ? -1 : 1) + currentX;
                     Point newPosition = new Point(xPosition, currentY + possibleEnPassant.y);
 
@@ -92,12 +91,6 @@ public class MoveVisitorImpl implements MoveVisitor {
                 }
             }
         }
-
-
-
-
-
-
         return Collections.unmodifiableList(moves);
     }
 

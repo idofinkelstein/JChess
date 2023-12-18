@@ -18,15 +18,14 @@ public class PawnJumpMove extends Move{
     @Override
     public Board makeMove() {
         Board.BoardBuilder builder = new Board.BoardBuilder();
-        Player activePlayer = board.getCurrentPlayer();
+        Player activePlayer = board.getActivePlayer();
 
         builder.setActivePlayer(activePlayer.getOpponent().getColor())
-                .placePiecesExcluding(board.getCurrentPlayer()
+                .placePiecesExcluding(board.getActivePlayer()
                         .getOpponent().getAvailablePieces(), null)
-                .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece));
+                .placePiecesExcluding(board.getActivePlayer().getAvailablePieces(), List.of(movedPiece));
 
         Pawn enPassant = (Pawn) movedPiece.movePiece(destination);
-//        enPassant.setEnPassantPawn(true);
 
         return builder.placePiece(enPassant).setEnPassantPawn(enPassant).build();
     }

@@ -6,7 +6,6 @@ import com.chess.engine.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -27,12 +26,12 @@ public abstract class Move {
 
     public Board makeMove() {
         Board.BoardBuilder builder = new Board.BoardBuilder();
-        Player activePlayer = board.getCurrentPlayer();
+        Player activePlayer = board.getActivePlayer();
 
         builder.setActivePlayer(activePlayer.getOpponent().getColor())
-                .placePiecesExcluding(board.getCurrentPlayer()
+                .placePiecesExcluding(board.getActivePlayer()
                         .getOpponent().getAvailablePieces(), null)
-                .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece));
+                .placePiecesExcluding(board.getActivePlayer().getAvailablePieces(), List.of(movedPiece));
 
 
         return builder.placePiece(movedPiece.movePiece(destination)).build();

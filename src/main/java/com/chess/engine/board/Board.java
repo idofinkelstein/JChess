@@ -1,7 +1,6 @@
 package com.chess.engine.board;
 
 import com.chess.engine.move.Move;
-import com.chess.engine.move.MoveUtils;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 import com.chess.engine.player.BlackPlayer;
@@ -12,15 +11,17 @@ import lombok.Getter;
 
 import java.awt.Point;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Board {
 
     public static final int BOARD_SIZE = 8;
     private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
+    @Getter
     private final Player activePlayer;
+    @Getter
     private final BlackPlayer blackPlayer;
+    @Getter
     private final WhitePlayer whitePlayer;
     @Getter
     private Pawn enPassantPawn = null;
@@ -67,18 +68,6 @@ public class Board {
 
     public Tile getTile(int x, int y) {
         return gameBoard[x][y];
-    }
-
-    public Player getBlackPlayer() {
-        return blackPlayer;
-    }
-
-    public Player getWhitePlayer() {
-        return whitePlayer;
-    }
-
-    public Player getCurrentPlayer() {
-        return activePlayer;
     }
 
     public Player getOpponent() {

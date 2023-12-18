@@ -14,10 +14,8 @@ import static com.chess.engine.move.MoveUtils.WHITE_PAWN_STARTING_ROW;
 @Getter
 @Setter
 public class Pawn extends Piece {
-//    private boolean isEnPassantPawn;
     public Pawn(Point position, Color color, boolean isFirstMove) {
         super(position, color, isFirstMove);
-//        this.isEnPassantPawn = false;
     }
 
     @Override
@@ -38,6 +36,5 @@ public class Pawn extends Piece {
     @Override
     public Piece movePiece(Point destination) {
         return new Pawn(destination, getColor(), false);
-        // TOD: decide state of "isEnPassant" according to subclass of Move.
     }
 }

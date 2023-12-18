@@ -8,10 +8,8 @@ import java.util.List;
 
 public class Rook extends Piece{
 
-    private final PieceType pieceType;
     public Rook(Point position, Color color, boolean isFirstMove) {
         super(position, color, isFirstMove);
-        this.pieceType = PieceType.ROOK;
     }
 
     @Override
@@ -20,7 +18,7 @@ public class Rook extends Piece{
     }
 
     public PieceType getPieceType() {
-        return pieceType;
+        return PieceType.ROOK;
     }
 
     @Override

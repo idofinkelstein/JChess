@@ -7,8 +7,6 @@ import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.move.MoveFactory;
 import com.chess.engine.piece.King;
-import com.chess.engine.piece.MoveVisitor;
-import com.chess.engine.piece.MoveVisitorImpl;
 import com.chess.engine.piece.Piece;
 
 import javax.imageio.ImageIO;
@@ -19,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.chess.engine.board.Board.*;
@@ -181,7 +178,7 @@ public class Table {
                             destinationTile = board.getTile(tileRowId, tileColumnId);
                             Move move = MoveFactory.constructMove(board, destinationTile.getPosition(),
                                     sourceTile.getPosition());
-                            MoveAttempt moveAttempt = board.getCurrentPlayer().makeMove(move, board);
+                            MoveAttempt moveAttempt = board.getActivePlayer().makeMove(move, board);
                             if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
                                 board = moveAttempt.getBoard();
                                 moveLog.addMove(move);
@@ -209,11 +206,18 @@ public class Table {
                 public void mousePressed(MouseEvent e) {
 //                    sourcePiece = board.getTile(tileRowId, tileColumnId).getPiece();
 //                    System.out.println(sourcePiece);
+//
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-//                    sourcePiece.setPosition(e.getX(), e.getY());
+//                    sourcePiece.setPosition(new Point(e.getX(), e.getY()));
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            boardPanel.drawBoard(board);
+//                        }
+//                    });
                 }
 
                 @Override
@@ -225,6 +229,8 @@ public class Table {
                 public void mouseExited(MouseEvent e) {
 
                 }
+
+
             });
             addMouseMotionListener(new MouseMotionListener() {
                 @Override
@@ -310,7 +316,7 @@ public class Table {
 //                                throw new RuntimeException(e);
 //                            }
 //                        }
-                        if (!destinationTile.isOccupied() && board.getCurrentPlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+                        if (!destinationTile.isOccupied() && board.getActivePlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK) {
                             if (move instanceof CastlingMove) {
                                 try {
                                     System.out.println("green dot on tile" + getTilePosition());
@@ -332,7 +338,6 @@ public class Table {
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -344,18 +349,15 @@ public class Table {
 
         private List<Move> pieceMoves(Board board) {
             List<Move> pieceMoves = new ArrayList<>();
-            if (sourcePiece != null && sourcePiece.getColor() == board.getCurrentPlayer().getColor()) {
-                for (Move move : board.getCurrentPlayer().getAvailableMoves()) {
+            if (sourcePiece != null && sourcePiece.getColor() == board.getActivePlayer().getColor()) {
+
+                for (Move move : board.getActivePlayer().getAvailableMoves()) {
                     if (move.getMovedPiece() == sourcePiece) {
                         pieceMoves.add(move);
                     }
                 }
-
-
-//                MoveVisitor moveVisitor = new MoveVisitorImpl();
-//                pieceMoves.addAll(sourcePiece.accept(moveVisitor, board));
                 if (sourcePiece instanceof King) {
-                    pieceMoves.addAll(board.getCurrentPlayer().calculateCastlingMoves());
+                    pieceMoves.addAll(board.getActivePlayer().calculateCastlingMoves());
                 }
             }
             return pieceMoves;

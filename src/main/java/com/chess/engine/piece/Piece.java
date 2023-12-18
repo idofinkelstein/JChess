@@ -2,7 +2,6 @@ package com.chess.engine.piece;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.move.Move;
-import com.chess.gui.MoveLog;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,7 +42,7 @@ public abstract class Piece {
     }
 
     public int getPieceValue() {
-        return getPieceType().getPieceValue();
+        return getPieceType().getValue();
     }
 
     @Override
