@@ -36,7 +36,6 @@ public abstract class Move {
                         .getOpponent().getAvailablePieces(), null)
                 .placePiecesExcluding(board.getActivePlayer().getAvailablePieces(), List.of(movedPiece));
 
-
         return builder.placePiece(movedPiece.movePiece(destination)).build();
     }
 

@@ -69,7 +69,7 @@ public abstract class Player {
     private boolean hasEscapeMove() {
         for (Move move : availableMoves) {
             MoveAttempt moveAttempt = makeMove(move, board);
-            if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+            if (moveAttempt.moveStatus() == MoveAttempt.MoveStatus.OK) {
                 return true;
             }
         }

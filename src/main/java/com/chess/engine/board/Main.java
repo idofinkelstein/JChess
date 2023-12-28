@@ -17,7 +17,7 @@ public class Main {
 
         Player activePlayer = board.getActivePlayer();
         MoveAttempt moveAttempt = activePlayer.makeMove(move, board);
-        Board transitionBoard = moveAttempt.getBoard();
+        Board transitionBoard = moveAttempt.board();
 
         System.out.println(transitionBoard);
 

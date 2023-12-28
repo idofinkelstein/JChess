@@ -37,4 +37,25 @@ public class Pawn extends Piece {
     public Piece movePiece(Point destination) {
         return new Pawn(destination, getColor(), false);
     }
+
+    public boolean isLastSquare(Point position) {
+        return getColor().isLastSquare(position);
+    }
+
+    public Piece getPromotionPiece(PieceType type) {
+        switch (type) {
+            case ROOK -> {
+                return new Rook(getPosition(), getColor(), false);
+            }
+            case BISHOP -> {
+                return new Bishop(getPosition(), getColor(), false);
+            }
+            case KNIGHT -> {
+                return new Knight(getPosition(), getColor(), false);
+            }
+            default -> { // Queen is the default promotion
+                return new Queen(getPosition(), getColor(), false);
+            }
+        }
+    }
 }

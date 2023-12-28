@@ -30,4 +30,5 @@ public class Queen extends Piece {
     public String toString() {
         return PieceType.QUEEN.toString();
     }
+
 }

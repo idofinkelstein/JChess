@@ -2,12 +2,10 @@ package com.chess.gui;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Tile;
-import com.chess.engine.move.CastlingMove;
-import com.chess.engine.move.Move;
-import com.chess.engine.move.MoveAttempt;
-import com.chess.engine.move.MoveFactory;
+import com.chess.engine.move.*;
 import com.chess.engine.piece.King;
 import com.chess.engine.piece.Piece;
+import com.chess.engine.piece.PieceType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -39,8 +37,8 @@ public class Table {
 
     private final TakenPiecesPanel takenPiecesPanel;
     private final GameHistoryPanel gameHistoryPanel;
-
-    private MoveLog moveLog;
+    private PieceType promotionPiece;
+    private final MoveLog moveLog;
 
     public Table() {
         this.moveLog = new MoveLog();
@@ -58,9 +56,8 @@ public class Table {
 
         populateMenu(tableMenuBar);
         this.gameFrame.setJMenuBar(tableMenuBar);
-
-
         this.gameFrame.setVisible(true);
+
     }
 
     private void populateMenu(JMenuBar tableMenuBar) {
@@ -167,24 +164,41 @@ public class Table {
                         sourcePiece = null;
                     } else if (isLeftMouseButton(e)) {
                         if (sourceTile == null) {
+
                             sourceTile = board.getTile(tileRowId, tileColumnId);
                             sourcePiece = sourceTile.getPiece();
                             if (sourcePiece == null) {
+
                                 System.out.println("no piece here");
                                 sourceTile = null;
                             } else {
                                 System.out.println(sourcePiece.toString() + " is about to move");
                             }
                         } else if (destinationTile == null) {
+
                             destinationTile = board.getTile(tileRowId, tileColumnId);
                             Move move = MoveFactory.constructMove(board, destinationTile.getPosition(),
                                     sourceTile.getPosition());
+
                             MoveAttempt moveAttempt = board.getActivePlayer().makeMove(move, board);
-                            if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
-                                board = moveAttempt.getBoard();
+                            if (moveAttempt.moveStatus() == MoveAttempt.MoveStatus.OK) {
+                                if (moveAttempt.move() instanceof PawnPromotion pawnPromotion) {
+                                    PieceType[] possibilities = {PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT};
+                                    promotionPiece = (PieceType)JOptionPane.showInputDialog(
+                                            gameFrame,
+                                            "Choose piece:",
+                                            "Piece Promotion",
+                                            JOptionPane.PLAIN_MESSAGE,
+                                            null,
+                                            possibilities,
+                                            PieceType.QUEEN);
+                                    pawnPromotion.setPromotionType(promotionPiece);
+                                    moveAttempt = board.getActivePlayer().makeMove(move, board);
+                                }
+                                board = moveAttempt.board();
                                 moveLog.addMove(move);
                             } else {
-                                System.out.println(moveAttempt.getMoveStatus().toString());
+                                System.out.println(moveAttempt.moveStatus().toString());
                             }
                             System.out.println("now clicking on destination tile");
                             sourceTile = null;
@@ -317,7 +331,7 @@ public class Table {
 //                                throw new RuntimeException(e);
 //                            }
 //                        }
-                        if (!destinationTile.isOccupied() && board.getActivePlayer().makeMove(move, board).getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+                        if (!destinationTile.isOccupied() && board.getActivePlayer().makeMove(move, board).moveStatus() == MoveAttempt.MoveStatus.OK) {
                             if (move instanceof CastlingMove) {
                                 try {
                                     System.out.println("green dot on tile" + getTilePosition());

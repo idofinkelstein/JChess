@@ -34,6 +34,10 @@ public class MoveVisitorImpl implements MoveVisitor {
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied()) {
                 Point newPosition = POSITIONS[newX][newY];
                 Move move = new PawnMove(board, pawn, newPosition, pawn.getPosition());
+
+                if (pawn.isLastSquare(newPosition)) {
+                    move = new PawnPromotion(move);
+                }
                 moves.add(move);
             }
         }
@@ -70,6 +74,10 @@ public class MoveVisitorImpl implements MoveVisitor {
 
                 if (!pieceOnTile.getColor().equals(pawn.getColor())) { // There is an enemy piece
                     Move move = new PawnAttackMove(board, pawn, newPosition, pawn.getPosition(), pieceOnTile);
+
+                    if (pawn.isLastSquare(newPosition)) {
+                        move = new PawnPromotion(move);
+                    }
                     moves.add(move);
                 }
             }
