@@ -52,7 +52,8 @@ public abstract class Piece {
         Piece piece = (Piece) o;
         return Objects.equals(position, piece.position)
                 && color == piece.color
-                && getPieceType().equals(((Piece) o).getPieceType());
+                && getPieceType().equals(piece.getPieceType())
+                && isFirstMove() == piece.isFirstMove();
     }
 
     @Override

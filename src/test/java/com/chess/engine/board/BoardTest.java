@@ -3,6 +3,7 @@ package com.chess.engine.board;
 import com.chess.engine.move.CastlingMove;
 import com.chess.engine.move.KingSideCastling;
 import com.chess.engine.piece.*;
+import com.chess.engine.player.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,6 +72,8 @@ class BoardTest {
 
     @Test
     void getOpponent() {
+        Player currentPlayer = board.getActivePlayer();
+        assertNotEquals(currentPlayer.getColor(), currentPlayer.getOpponent().getColor());
     }
 
     @Test
@@ -83,5 +86,57 @@ class BoardTest {
 
     @Test
     void getAvailableMoves() {
+    }
+
+    @Test
+    void testStandardBoard() {
+        // Test all black pieces are in place
+        assertEquals(new Rook(POSITIONS[0][0], Color.BLACK, true), board.getTile(0, 0).getPiece());
+        assertEquals(new Knight(POSITIONS[0][1], Color.BLACK, true), board.getTile(0, 1).getPiece());
+        assertEquals(new Bishop(POSITIONS[0][2], Color.BLACK, true), board.getTile(0, 2).getPiece());
+        assertEquals(new Queen(POSITIONS[0][3], Color.BLACK, true), board.getTile(0, 3).getPiece());
+        assertEquals(new King(POSITIONS[0][4], Color.BLACK, true), board.getTile(0, 4).getPiece());
+        assertEquals(new Bishop(POSITIONS[0][5], Color.BLACK, true), board.getTile(0, 5).getPiece());
+        assertEquals(new Knight(POSITIONS[0][6], Color.BLACK, true), board.getTile(0, 6).getPiece());
+        assertEquals(new Rook(POSITIONS[0][7], Color.BLACK, true), board.getTile(0, 7).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][0], Color.BLACK, true), board.getTile(1, 0).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][1], Color.BLACK, true), board.getTile(1, 1).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][2], Color.BLACK, true), board.getTile(1, 2).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][3], Color.BLACK, true), board.getTile(1, 3).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][4], Color.BLACK, true), board.getTile(1, 4).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][5], Color.BLACK, true), board.getTile(1, 5).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][6], Color.BLACK, true), board.getTile(1, 6).getPiece());
+        assertEquals(new Pawn(POSITIONS[1][7], Color.BLACK, true), board.getTile(1, 7).getPiece());
+        // Test all white pieces are in place
+        assertEquals(new Pawn(POSITIONS[6][0], Color.WHITE, true), board.getTile(6, 0).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][1], Color.WHITE, true), board.getTile(6, 1).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][2], Color.WHITE, true), board.getTile(6, 2).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][3], Color.WHITE, true), board.getTile(6, 3).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][4], Color.WHITE, true), board.getTile(6, 4).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][5], Color.WHITE, true), board.getTile(6, 5).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][6], Color.WHITE, true), board.getTile(6, 6).getPiece());
+        assertEquals(new Pawn(POSITIONS[6][7], Color.WHITE, true), board.getTile(6, 7).getPiece());
+        assertEquals(new Rook(POSITIONS[7][0], Color.WHITE, true), board.getTile(7, 0).getPiece());
+        assertEquals(new Knight(POSITIONS[7][1], Color.WHITE, true), board.getTile(7, 1).getPiece());
+        assertEquals(new Bishop(POSITIONS[7][2], Color.WHITE, true), board.getTile(7, 2).getPiece());
+        assertEquals(new Queen(POSITIONS[7][3], Color.WHITE, true), board.getTile(7, 3).getPiece());
+        assertEquals(new King(POSITIONS[7][4], Color.WHITE, true), board.getTile(7, 4).getPiece());
+        assertEquals(new Bishop(POSITIONS[7][5], Color.WHITE, true), board.getTile(7, 5).getPiece());
+        assertEquals(new Knight(POSITIONS[7][6], Color.WHITE, true), board.getTile(7, 6).getPiece());
+        assertEquals(new Rook(POSITIONS[7][7], Color.WHITE, true), board.getTile(7, 7).getPiece());
+
+        for (int i = 2; i < 6; i++) {
+            for (int j = 0; j < 7; j++) {
+                assertFalse(board.getTile(i, j).isOccupied());
+            }
+        }
+        assertEquals(Color.WHITE, board.getActivePlayer().getColor());
+        assertEquals(Color.BLACK, board.getActivePlayer().getOpponent().getColor());
+        assertFalse(board.getActivePlayer().isInCheck());
+        assertFalse(board.getActivePlayer().isInCheckMate());
+        assertFalse(board.getActivePlayer().isInStalemate());
+        assertFalse(board.getActivePlayer().getOpponent().isInCheck());
+        assertFalse(board.getActivePlayer().getOpponent().isInCheckMate());
+        assertFalse(board.getActivePlayer().getOpponent().isInStalemate());
     }
 }
