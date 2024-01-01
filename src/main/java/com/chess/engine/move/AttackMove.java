@@ -3,10 +3,11 @@ package com.chess.engine.move;
 import com.chess.engine.board.Board;
 import com.chess.engine.piece.Piece;
 import com.chess.engine.player.Player;
+import lombok.EqualsAndHashCode;
 
 import java.awt.*;
 import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 public abstract class AttackMove extends Move{
     protected final Piece attackedPiece;
 
@@ -18,12 +19,12 @@ public abstract class AttackMove extends Move{
     @Override
     public Board makeMove() {
         Board.BoardBuilder builder = new Board.BoardBuilder();
-        Player activePlayer = board.getCurrentPlayer();
+        Player activePlayer = board.getActivePlayer();
 
         builder.setActivePlayer(activePlayer.getOpponent().getColor())
-                .placePiecesExcluding(board.getCurrentPlayer()
+                .placePiecesExcluding(board.getActivePlayer()
                         .getOpponent().getAvailablePieces(), List.of(attackedPiece))
-                .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece));
+                .placePiecesExcluding(board.getActivePlayer().getAvailablePieces(), List.of(movedPiece));
         builder.placePiece(movedPiece.movePiece(getDestination()));
         return builder.build();
     }

@@ -3,10 +3,12 @@ package com.chess.engine.move;
 import com.chess.engine.board.Board;
 import com.chess.engine.piece.Piece;
 import com.chess.engine.player.Player;
+import lombok.EqualsAndHashCode;
 
 import java.awt.*;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 public abstract class CastlingMove extends Move{
     // king piece and king position are extended from base class (Move)
     protected final Piece rook;
@@ -21,12 +23,12 @@ public abstract class CastlingMove extends Move{
     @Override
     public Board makeMove() {
         Board.BoardBuilder builder = new Board.BoardBuilder();
-        Player activePlayer = board.getCurrentPlayer();
+        Player activePlayer = board.getActivePlayer();
 
         builder.setActivePlayer(activePlayer.getOpponent().getColor())
-                .placePiecesExcluding(board.getCurrentPlayer()
+                .placePiecesExcluding(board.getActivePlayer()
                         .getOpponent().getAvailablePieces(), null)
-                .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece, rook));
+                .placePiecesExcluding(board.getActivePlayer().getAvailablePieces(), List.of(movedPiece, rook));
 
         builder.placePiece(movedPiece.movePiece(destination));
         builder.placePiece(rook.movePiece(rookDestination));

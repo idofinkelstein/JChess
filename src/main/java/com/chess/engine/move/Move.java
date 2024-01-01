@@ -6,9 +6,11 @@ import com.chess.engine.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+
+import static com.chess.engine.move.MoveUtils.NUM_TO_LETTER_TEXT;
+import static com.chess.engine.move.MoveUtils.NUM_TO_NUM_TEXT;
 
 @EqualsAndHashCode
 @Getter
@@ -27,19 +29,22 @@ public abstract class Move {
 
     public Board makeMove() {
         Board.BoardBuilder builder = new Board.BoardBuilder();
-        Player activePlayer = board.getCurrentPlayer();
+        Player activePlayer = board.getActivePlayer();
 
         builder.setActivePlayer(activePlayer.getOpponent().getColor())
-                .placePiecesExcluding(board.getCurrentPlayer()
+                .placePiecesExcluding(board.getActivePlayer()
                         .getOpponent().getAvailablePieces(), null)
-                .placePiecesExcluding(board.getCurrentPlayer().getAvailablePieces(), List.of(movedPiece));
+                .placePiecesExcluding(board.getActivePlayer().getAvailablePieces(), List.of(movedPiece));
 
-        builder.placePiece(movedPiece.movePiece(destination));
-
-        return builder.build();
+        return builder.placePiece(movedPiece.movePiece(destination)).build();
     }
 
     public Piece getAttackedPiece() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return NUM_TO_LETTER_TEXT.get(getDestination().y) + NUM_TO_NUM_TEXT.get(getDestination().x);
     }
 }

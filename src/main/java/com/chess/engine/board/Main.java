@@ -15,9 +15,9 @@ public class Main {
 
         Move move = new PawnJumpMove(board, board.getTile(6, 0).getPiece(), new Point(4, 0), new Point(6, 0));
 
-        Player activePlayer = board.getCurrentPlayer();
+        Player activePlayer = board.getActivePlayer();
         MoveAttempt moveAttempt = activePlayer.makeMove(move, board);
-        Board transitionBoard = moveAttempt.getBoard();
+        Board transitionBoard = moveAttempt.board();
 
         System.out.println(transitionBoard);
 

@@ -7,10 +7,8 @@ import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 import lombok.Getter;
 
-import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -71,7 +69,7 @@ public abstract class Player {
     private boolean hasEscapeMove() {
         for (Move move : availableMoves) {
             MoveAttempt moveAttempt = makeMove(move, board);
-            if (moveAttempt.getMoveStatus() == MoveAttempt.MoveStatus.OK) {
+            if (moveAttempt.moveStatus() == MoveAttempt.MoveStatus.OK) {
                 return true;
             }
         }
@@ -92,8 +90,8 @@ public abstract class Player {
 
         Board transitionBoard = move.makeMove();
         // check if current player's king is in check
-        List<Move> attacksOnKing = calculateAttackOnTile(transitionBoard.getCurrentPlayer().getOpponent().getKing().getPosition(),
-                transitionBoard.getCurrentPlayer().getAvailableMoves());
+        List<Move> attacksOnKing = calculateAttackOnTile(transitionBoard.getActivePlayer().getOpponent().getKing().getPosition(),
+                transitionBoard.getActivePlayer().getAvailableMoves());
 
         if (!attacksOnKing.isEmpty()) { // this move leaves king in check
             return new MoveAttempt(transitionBoard, move, MoveAttempt.MoveStatus.LEAVES_KING_IN_CHECK);

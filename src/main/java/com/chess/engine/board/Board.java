@@ -1,7 +1,6 @@
 package com.chess.engine.board;
 
 import com.chess.engine.move.Move;
-import com.chess.engine.move.MoveUtils;
 import com.chess.engine.piece.*;
 import com.chess.engine.piece.Color;
 import com.chess.engine.player.BlackPlayer;
@@ -12,16 +11,22 @@ import lombok.Getter;
 
 import java.awt.Point;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.chess.engine.board.BoardUtils.POSITIONS;
 
 public class Board {
 
     public static final int BOARD_SIZE = 8;
     private final Tile[][] gameBoard = new Tile[BOARD_SIZE][BOARD_SIZE];
+    @Getter
     private final Player activePlayer;
+    @Getter
     private final BlackPlayer blackPlayer;
+    @Getter
     private final WhitePlayer whitePlayer;
+    @Getter
+    private Pawn enPassantPawn = null;
 
     @Getter
     private final List<Move> availableMoves;
@@ -30,7 +35,7 @@ public class Board {
         for (int x = 0; x < BOARD_SIZE; x++) {
             for (int y = 0; y < BOARD_SIZE; y++) {
 
-                Point position = new Point(x, y);
+                Point position = POSITIONS[x][y];
                 if (builder.PieceOnTileMap.containsKey(position)) {
                     gameBoard[x][y] = new OccupiedTile(x, y, builder.PieceOnTileMap.get(position));
                 } else {
@@ -40,6 +45,7 @@ public class Board {
         }
         List<Piece> whitePieces = calculateAvailablePieces(Color.WHITE);
         List<Piece> blackPieces = calculateAvailablePieces(Color.BLACK);
+        enPassantPawn = builder.getEnPassantPawn();
 
         List<Move> whiteMoves = calculateAvailableMoves(whitePieces);
         List<Move> blackMoves = calculateAvailableMoves(blackPieces);
@@ -64,18 +70,6 @@ public class Board {
 
     public Tile getTile(int x, int y) {
         return gameBoard[x][y];
-    }
-
-    public Player getBlackPlayer() {
-        return blackPlayer;
-    }
-
-    public Player getWhitePlayer() {
-        return whitePlayer;
-    }
-
-    public Player getCurrentPlayer() {
-        return activePlayer;
     }
 
     public Player getOpponent() {
@@ -127,6 +121,8 @@ public class Board {
         private final Map<Point, Piece> PieceOnTileMap = new HashMap<>();
         @Getter
         private Color activePlayer;
+        @Getter
+        private Pawn enPassantPawn;
 
 
         public Board build() {
@@ -149,38 +145,38 @@ public class Board {
         }
 
         public BoardBuilder populateMap() {
-            placePiece(new Rook(new Point(0, 0), Color.BLACK, true));
-            placePiece(new Knight(new Point(0, 1), Color.BLACK, true));
-            placePiece(new Bishop(new Point(0, 2), Color.BLACK, true));
-            placePiece(new Queen(new Point(0, 3), Color.BLACK, true));
-            placePiece(new King(new Point(0, 4), Color.BLACK, true));
-            placePiece(new Bishop(new Point(0, 5), Color.BLACK, true));
-            placePiece(new Knight(new Point(0, 6), Color.BLACK, true));
-            placePiece(new Rook(new Point(0, 7), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 0), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 1), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 2), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 3), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 4), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 5), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 6), Color.BLACK, true));
-            placePiece(new Pawn(new Point(1, 7), Color.BLACK, true));
-            placePiece(new Pawn(new Point(6, 0), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 1), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 2), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 3), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 4), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 5), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 6), Color.WHITE, true));
-            placePiece(new Pawn(new Point(6, 7), Color.WHITE, true));
-            placePiece(new Rook(new Point(7, 0), Color.WHITE, true));
-            placePiece(new Knight(new Point(7, 1), Color.WHITE, true));
-            placePiece(new Bishop(new Point(7, 2), Color.WHITE, true));
-            placePiece(new Queen(new Point(7, 3), Color.WHITE, true));
-            placePiece(new King(new Point(7, 4), Color.WHITE, true));
-            placePiece(new Bishop(new Point(7, 5), Color.WHITE, true));
-            placePiece(new Knight(new Point(7, 6), Color.WHITE, true));
-            placePiece(new Rook(new Point(7, 7), Color.WHITE, true));
+            placePiece(new Rook(POSITIONS[0][0], Color.BLACK, true));
+            placePiece(new Knight(POSITIONS[0][1], Color.BLACK, true));
+            placePiece(new Bishop(POSITIONS[0][2], Color.BLACK, true));
+            placePiece(new Queen(POSITIONS[0][3], Color.BLACK, true));
+            placePiece(new King(POSITIONS[0][4], Color.BLACK, true));
+            placePiece(new Bishop(POSITIONS[0][5], Color.BLACK, true));
+            placePiece(new Knight(POSITIONS[0][6], Color.BLACK, true));
+            placePiece(new Rook(POSITIONS[0][7], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][0], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][1], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][2], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][3], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][4], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][5], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][6], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[1][7], Color.BLACK, true));
+            placePiece(new Pawn(POSITIONS[6][0], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][1], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][2], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][3], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][4], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][5], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][6], Color.WHITE, true));
+            placePiece(new Pawn(POSITIONS[6][7], Color.WHITE, true));
+            placePiece(new Rook(POSITIONS[7][0], Color.WHITE, true));
+            placePiece(new Knight(POSITIONS[7][1], Color.WHITE, true));
+            placePiece(new Bishop(POSITIONS[7][2], Color.WHITE, true));
+            placePiece(new Queen(POSITIONS[7][3], Color.WHITE, true));
+            placePiece(new King(POSITIONS[7][4], Color.WHITE, true));
+            placePiece(new Bishop(POSITIONS[7][5], Color.WHITE, true));
+            placePiece(new Knight(POSITIONS[7][6], Color.WHITE, true));
+            placePiece(new Rook(POSITIONS[7][7], Color.WHITE, true));
             return this;
         }
 
@@ -190,6 +186,11 @@ public class Board {
                     PieceOnTileMap.put(piece.getPosition(), piece);
                 }
             }
+            return this;
+        }
+
+        public BoardBuilder setEnPassantPawn(Pawn pawn) {
+            enPassantPawn = pawn;
             return this;
         }
     }

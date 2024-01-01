@@ -14,6 +14,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.chess.engine.board.BoardUtils.POSITIONS;
+
 public class WhitePlayer extends Player {
     public WhitePlayer(Board board,
                        List<Piece> availablePieces,
@@ -50,7 +52,7 @@ public class WhitePlayer extends Player {
                     && rook.isFirstMove()
                     && isTileSafeToGo(board.getTile(7, 6).getPosition())
                     && isTileSafeToGo(board.getTile(7, 5).getPosition())) {
-                CastlingMove kingSideCastle = new KingSideCastling(board, king, board.getTile(7, 7).getPiece(), new Point(7, 6), new Point(7, 5));
+                CastlingMove kingSideCastle = new KingSideCastling(board, king, board.getTile(7, 7).getPiece(), POSITIONS[7][6], POSITIONS[7][5]);
                 castlingMoves.add(kingSideCastle);
             }
             if (board.getTile(7, 0).isOccupied()
@@ -58,7 +60,7 @@ public class WhitePlayer extends Player {
                     && rook.isFirstMove()
                     && isTileSafeToGo(board.getTile(7, 3).getPosition())
                     && isTileSafeToGo(board.getTile(7, 2).getPosition())) {
-                CastlingMove queenSideCastle = new QueenSideCastling(board, king, board.getTile(7, 0).getPiece(), new Point(7, 2), new Point(7, 3));
+                CastlingMove queenSideCastle = new QueenSideCastling(board, king, board.getTile(7, 0).getPiece(), POSITIONS[7][2], POSITIONS[7][3]);
                 castlingMoves.add(queenSideCastle);
             }
         }

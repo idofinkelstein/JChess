@@ -1,6 +1,8 @@
 package com.chess.engine.move;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MoveUtils {
 
@@ -71,6 +73,10 @@ public class MoveUtils {
             new Point(1, -1),
             new Point(1, 1),
     };
+    public static final Point[] PAWN_POSSIBLE_EN_PASSANT_MOVES = {
+            new Point(0, -1),
+            new Point(0, 1),
+    };
 
     public static final Point[] KING_POSSIBLE_MOVES = QUEEN_POSSIBLE_MOVES;
 
@@ -103,4 +109,33 @@ public class MoveUtils {
             new Point(0, 1),
             new Point(0, 0),
     };
+
+    public static final Map<Integer, String> NUM_TO_LETTER_TEXT = initializeNumberToLetters();
+    public static final Map<Integer, String> NUM_TO_NUM_TEXT = initializeNumberToNumbers();
+
+    private static Map<Integer, String> initializeNumberToNumbers() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(0, "8");
+        map.put(1, "7");
+        map.put(2, "6");
+        map.put(3, "5");
+        map.put(4, "4");
+        map.put(5, "3");
+        map.put(6, "2");
+        map.put(7, "1");
+        return map;
+    }
+
+    private static Map<Integer, String> initializeNumberToLetters() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(0, "a");
+        map.put(1, "b");
+        map.put(2, "c");
+        map.put(3, "d");
+        map.put(4, "e");
+        map.put(5, "f");
+        map.put(6, "g");
+        map.put(7, "h");
+        return map;
+    }
 }

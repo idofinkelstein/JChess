@@ -2,6 +2,7 @@ package com.chess.engine.piece;
 
 
 import com.chess.engine.board.Board;
+import com.chess.engine.board.Tile;
 import com.chess.engine.move.*;
 
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.chess.engine.board.BoardUtils.POSITIONS;
 import static com.chess.engine.move.MoveUtils.*;
 
 public class MoveVisitorImpl implements MoveVisitor {
@@ -30,8 +32,12 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + pawnPossibleMove.y;
 
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied()) {
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 Move move = new PawnMove(board, pawn, newPosition, pawn.getPosition());
+
+                if (pawn.isLastSquare(newPosition)) {
+                    move = new PawnPromotion(move);
+                }
                 moves.add(move);
             }
         }
@@ -46,7 +52,8 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + pawnPossibleJumpMove.y;
 
             if (isMoveValid(newX, newY) && !board.getTile(newX, newY).isOccupied() && pawn.isFirstMove()) {
-                Point newPosition = new Point(newX, newY);
+
+                Point newPosition = POSITIONS[newX][newY];
                 Move move = new PawnJumpMove(board, pawn, newPosition, pawn.getPosition());
                 moves.add(move);
             }
@@ -62,11 +69,33 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + pawnPossibleAttackMove.y;
 
             if (isMoveValid(newX, newY) && board.getTile(newX, newY).isOccupied()) {
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
                 if (!pieceOnTile.getColor().equals(pawn.getColor())) { // There is an enemy piece
                     Move move = new PawnAttackMove(board, pawn, newPosition, pawn.getPosition(), pieceOnTile);
+
+                    if (pawn.isLastSquare(newPosition)) {
+                        move = new PawnPromotion(move);
+                    }
+                    moves.add(move);
+                }
+            }
+        }
+
+        // Calculate EnPassant Move
+        for (Point possibleEnPassant : PAWN_POSSIBLE_EN_PASSANT_MOVES) {
+
+            if (isMoveValid(currentX,currentY + possibleEnPassant.y)) {
+
+                Tile enPassantTile = board.getTile(currentX,currentY + possibleEnPassant.y);
+                Pawn enPassantPawn = board.getEnPassantPawn();
+                if (enPassantPawn != null && enPassantPawn == enPassantTile.getPiece()) {
+
+                    int xPosition = (pawn.getColor().equals(Color.WHITE) ? -1 : 1) + currentX;
+                    Point newPosition = POSITIONS[xPosition][currentY + possibleEnPassant.y];
+
+                    Move move = new EnPassantMove(board, pawn, newPosition, pawn.getPosition(), enPassantPawn);
                     moves.add(move);
                 }
             }
@@ -86,7 +115,7 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             if (isMoveValid(newX, newY)) {
 
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
@@ -115,7 +144,7 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + bishopPossibleMove.y;
 
             while (isMoveValid(newX, newY)) {
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
 
@@ -147,7 +176,7 @@ public class MoveVisitorImpl implements MoveVisitor {
 
             while (isMoveValid(newX, newY)) {
 
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
 
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
@@ -180,7 +209,7 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + queenPossibleMove.y;
 
             while (isMoveValid(newX, newY)) {
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
 
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
@@ -212,7 +241,7 @@ public class MoveVisitorImpl implements MoveVisitor {
             int newY = currentY + kingPossibleMove.y;
 
             if (isMoveValid(newX, newY)) {
-                Point newPosition = new Point(newX, newY);
+                Point newPosition = POSITIONS[newX][newY];
                 if (board.getTile(newX, newY).isOccupied()) { // There is a piece on the tile
                     Piece pieceOnTile = board.getTile(newX, newY).getPiece();
                     if (!pieceOnTile.getColor().equals(king.getColor())) { // There is an enemy piece on the tile
