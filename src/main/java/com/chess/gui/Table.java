@@ -39,8 +39,9 @@ public class Table {
     private final GameHistoryPanel gameHistoryPanel;
     private PieceType promotionPiece;
     private final MoveLog moveLog;
+    private static volatile Table INSTANCE;
 
-    public Table() {
+    private Table() {
         this.moveLog = new MoveLog();
         this.board = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
         this.gameFrame = new JFrame("Chess");
@@ -58,6 +59,17 @@ public class Table {
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setVisible(true);
 
+    }
+
+    public static Table getInstance() {
+        if (INSTANCE == null) {
+            synchronized (Table.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new Table();
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     private void populateMenu(JMenuBar tableMenuBar) {
