@@ -60,4 +60,9 @@ public class BlackPlayer extends Player{
         }
         return castlingMoves;
     }
+
+    @Override
+    public String toString() {
+        return "BlackPlayer";
+    }
 }

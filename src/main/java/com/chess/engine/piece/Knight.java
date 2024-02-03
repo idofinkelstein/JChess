@@ -12,7 +12,7 @@ public class Knight extends Piece {
     }
     @Override
     public String toString() {
-        return PieceType.KNIGHT.toString();
+        return color.equals(Color.WHITE) ? PieceType.KNIGHT.toString() : PieceType.KNIGHT.toString().toLowerCase();
     }
 
     @Override

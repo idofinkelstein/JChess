@@ -195,6 +195,7 @@ public class Table {
                             MoveAttempt moveAttempt = board.getActivePlayer().makeMove(move, board);
                             if (moveAttempt.moveStatus() == MoveAttempt.MoveStatus.OK) {
                                 if (moveAttempt.move() instanceof PawnPromotion pawnPromotion) {
+
                                     PieceType[] possibilities = {PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT};
                                     promotionPiece = (PieceType)JOptionPane.showInputDialog(
                                             gameFrame,

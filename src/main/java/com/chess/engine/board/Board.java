@@ -149,7 +149,7 @@ public class Board {
             placePiece(new Knight(POSITIONS[0][1], Color.BLACK, true));
             placePiece(new Bishop(POSITIONS[0][2], Color.BLACK, true));
             placePiece(new Queen(POSITIONS[0][3], Color.BLACK, true));
-            placePiece(new King(POSITIONS[0][4], Color.BLACK, true));
+            placePiece(new King(POSITIONS[0][4], Color.BLACK, true, true, true));
             placePiece(new Bishop(POSITIONS[0][5], Color.BLACK, true));
             placePiece(new Knight(POSITIONS[0][6], Color.BLACK, true));
             placePiece(new Rook(POSITIONS[0][7], Color.BLACK, true));
@@ -173,7 +173,7 @@ public class Board {
             placePiece(new Knight(POSITIONS[7][1], Color.WHITE, true));
             placePiece(new Bishop(POSITIONS[7][2], Color.WHITE, true));
             placePiece(new Queen(POSITIONS[7][3], Color.WHITE, true));
-            placePiece(new King(POSITIONS[7][4], Color.WHITE, true));
+            placePiece(new King(POSITIONS[7][4], Color.WHITE, true, true, true));
             placePiece(new Bishop(POSITIONS[7][5], Color.WHITE, true));
             placePiece(new Knight(POSITIONS[7][6], Color.WHITE, true));
             placePiece(new Rook(POSITIONS[7][7], Color.WHITE, true));

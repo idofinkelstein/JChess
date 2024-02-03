@@ -1,6 +1,7 @@
 package com.chess.engine.player;
 
 import com.chess.engine.board.Board;
+import com.chess.engine.move.KingSideCastling;
 import com.chess.engine.move.Move;
 import com.chess.engine.move.MoveAttempt;
 import com.chess.engine.piece.*;
@@ -107,5 +108,13 @@ public abstract class Player {
             }
         }
         throw new IllegalStateException("No king found");
+    }
+
+    public boolean isKingSideCastleCapable() {
+        return getKing().isKingSideCapable();
+    }
+
+    public boolean isQueenSideCastleCapable() {
+        return getKing().isQueenSideCapable();
     }
 }
