@@ -61,9 +61,7 @@ public class Board {
 
     private static String prettyPrint(Tile tile) {
         if (tile.isOccupied()) {
-            return (tile.getPiece().getColor() == Color.BLACK)
-                    ? tile.getPiece().toString()
-                    : tile.getPiece().toString().toLowerCase();
+            return tile.getPiece().toString();
         }
         return "-";
     }

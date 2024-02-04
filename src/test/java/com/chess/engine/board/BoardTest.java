@@ -138,5 +138,6 @@ class BoardTest {
         assertFalse(board.getActivePlayer().getOpponent().isInCheck());
         assertFalse(board.getActivePlayer().getOpponent().isInCheckMate());
         assertFalse(board.getActivePlayer().getOpponent().isInStalemate());
+        System.out.println(board);
     }
 }

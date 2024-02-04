@@ -17,8 +17,8 @@ public class FenUtils {
 
     public static Board createGameFromFen(String fenStr) {
         // input: RNBQKBNR/1PPPPPPP/8/P7/p7/8/1ppppppp/rnbqkbnr w KQkq a6 0 1
-        String[] splited = fenStr.split("\\s+");
-        return null;
+        FenParser fenParser = new FenParser(fenStr);
+        return fenParser.constructBoard();
     }
 
     public static String createGameFromBoard(Board board) {
