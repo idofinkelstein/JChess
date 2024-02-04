@@ -1,13 +1,12 @@
 package com.chess.pgn;
 
 import com.chess.engine.board.Board;
-import com.chess.engine.board.BoardUtils;
 import com.chess.engine.piece.Color;
 import com.chess.engine.piece.Pawn;
 
 import static com.chess.engine.board.Board.BOARD_SIZE;
-import static com.chess.engine.move.MoveUtils.NUM_TO_LETTER_TEXT;
-import static com.chess.engine.move.MoveUtils.NUM_TO_NUM_TEXT;
+import static com.chess.engine.move.MoveUtils.INDEX_TO_CHESS_LETTER_NOTATION;
+import static com.chess.engine.move.MoveUtils.INDEX_TO_CHESS_NUMBER_NOTATION;
 
 public class FenUtils {
 
@@ -32,8 +31,8 @@ public class FenUtils {
         Pawn pawn = board.getEnPassantPawn();
         if (pawn != null ) {
             int tileBehindEnPassant = pawn.getColor().equals(Color.WHITE) ? 1 : -1;
-            return NUM_TO_LETTER_TEXT.get(pawn.getPosition().y) +
-                    NUM_TO_NUM_TEXT.get(pawn.getPosition().x + tileBehindEnPassant);
+            return INDEX_TO_CHESS_LETTER_NOTATION.get(pawn.getPosition().y) +
+                    INDEX_TO_CHESS_NUMBER_NOTATION.get(pawn.getPosition().x + tileBehindEnPassant);
         }
         return "-";
     }

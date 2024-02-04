@@ -7,6 +7,7 @@ import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import lombok.Getter;
+import lombok.Setter;
 
 
 import java.awt.Point;
@@ -26,6 +27,7 @@ public class Board {
     @Getter
     private final WhitePlayer whitePlayer;
     @Getter
+    @Setter
     private Pawn enPassantPawn = null;
 
     @Getter

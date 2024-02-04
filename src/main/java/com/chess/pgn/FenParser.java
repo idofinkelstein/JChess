@@ -5,6 +5,8 @@ import com.chess.engine.piece.*;
 
 import static com.chess.engine.board.Board.BOARD_SIZE;
 import static com.chess.engine.board.BoardUtils.POSITIONS;
+import static com.chess.engine.move.MoveUtils.CHESS_LETTER_NOTATION_TO_INDEX;
+import static com.chess.engine.move.MoveUtils.CHESS_NUMBER_NOTATION_TO_INDEX;
 
 public class FenParser {
     private final String boardText;
@@ -38,8 +40,10 @@ public class FenParser {
         // to be implemented
         Board.BoardBuilder builder = parseBoardText();
         builder = parseCurrentPlayerText(builder);
+        Board board = builder.build();
 
-        return builder.build();
+
+        return parseEnPassantText(board);
     }
 
     private Board.BoardBuilder parseBoardText() {
@@ -133,6 +137,21 @@ public class FenParser {
                 isBlackQueenSideRookMove = true;
             }
         }
+    }
 
+    private Board parseEnPassantText(Board board) {
+        if (enPassantText.length() == 2) {
+            int j = CHESS_LETTER_NOTATION_TO_INDEX.get(String.valueOf(enPassantText.charAt(0)));
+            int i = CHESS_NUMBER_NOTATION_TO_INDEX.get(String.valueOf(enPassantText.charAt(1)));
+            if (i == 2) {
+                i++;
+            }
+            else if (i == 5) {
+                i--;
+            }
+            Pawn enPassant = (Pawn)board.getTile(i, j).getPiece();
+            board.setEnPassantPawn(enPassant);
+        }
+    return board;
     }
 }
