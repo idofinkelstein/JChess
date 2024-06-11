@@ -6,15 +6,22 @@ import com.chess.engine.move.*;
 import com.chess.engine.piece.King;
 import com.chess.engine.piece.Piece;
 import com.chess.engine.piece.PieceType;
+import com.chess.pgn.FenUtils;
+import com.chess.pgn.IOHandler;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.chess.engine.board.Board.*;
@@ -89,6 +96,64 @@ public class Table {
             }
         });
         fileMenu.add(openPGN);
+
+        final JMenuItem loadGame = new JMenuItem("Load Game");
+        loadGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Load Game");
+                JFileChooser fileChooser = new JFileChooser();
+                FileFilter filter = new FileNameExtensionFilter("fen files", "fen");
+                fileChooser.addChoosableFileFilter(filter);
+                fileChooser.setCurrentDirectory(new java.io.File("src/main/resources/saved_games"));
+                fileChooser.setDialogTitle("Choose Game");
+
+
+                int ret = fileChooser.showDialog(null, "Open file");
+
+                File file = null;
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    file = fileChooser.getSelectedFile();
+                }
+                if (file != null) {
+                    try {
+                        String gameText = IOHandler.loadGame(String.valueOf(file));
+                        board = FenUtils.createBoardFromFen(gameText);
+                        boardPanel.drawBoard(board);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            }
+        });
+        fileMenu.add(loadGame);
+
+        final JMenuItem saveGame = new JMenuItem("Save Game");
+        saveGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Save game");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String filename = sdf.format(new Date())
+                        .replaceAll("\\s+", "_")
+                        .replaceAll(":", "_")
+                        .concat(".fen");
+
+                Path filePath = Path.of("src/main/resources/saved_games");
+                Path absolutePath = Path.of(String.valueOf(filePath), filename);
+                String gameText = FenUtils.createFenFromBoard(board);
+
+                try {
+                    IOHandler.saveGame(gameText, absolutePath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+        fileMenu.add(saveGame);
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
@@ -184,7 +249,7 @@ public class Table {
                                 System.out.println("no piece here");
                                 sourceTile = null;
                             } else {
-                                System.out.println(sourcePiece.toString() + " is about to move");
+                                System.out.println(sourcePiece + " is about to move");
                             }
                         } else if (destinationTile == null) {
 

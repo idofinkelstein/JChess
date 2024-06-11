@@ -18,8 +18,8 @@ class FenUtilsTest {
     @Test
     public void testStandardBoardToFen() {
         Board standardBoard = new Board.BoardBuilder().setStartingPlayer().populateMap().build();
-        String boardText = FenUtils.createGameFromBoard(standardBoard);
-        String expectedFenNotation = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w KQkq - 0 1";
+        String boardText = FenUtils.createFenFromBoard(standardBoard);
+        String expectedFenNotation = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         Assertions.assertEquals(expectedFenNotation, boardText);
     }
 
@@ -32,8 +32,8 @@ class FenUtilsTest {
         MoveAttempt moveAttempt = whitePlayer.makeMove(move, board);
         board = moveAttempt.board();
 
-        String boardText = FenUtils.createGameFromBoard(board);
-        String expectedFenNotation = "RNBQKBNR/1PPPPPPP/8/P7/8/8/pppppppp/rnbqkbnr b KQkq a3 0 1";
+        String boardText = FenUtils.createFenFromBoard(board);
+        String expectedFenNotation = "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1";
         Assertions.assertEquals(expectedFenNotation, boardText);
     }
 
@@ -53,15 +53,15 @@ class FenUtilsTest {
         MoveAttempt blackMoveAttempt = blackPlayer.makeMove(blackMove, board);
         board = blackMoveAttempt.board();
 
-        String boardText = FenUtils.createGameFromBoard(board);
-        String expectedFenNotation = "RNBQKBNR/1PPPPPPP/8/P7/p7/8/1ppppppp/rnbqkbnr w KQkq a6 0 1";
+        String boardText = FenUtils.createFenFromBoard(board);
+        String expectedFenNotation = "rnbqkbnr/1ppppppp/8/p7/P7/8/1PPPPPPP/RNBQKBNR w KQkq a6 0 1";
         Assertions.assertEquals(expectedFenNotation, boardText);
     }
 
     @Test
     public void testFenToBoard_standardBoard() {
         String standardBoardText = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        Board standardBoard = FenUtils.createGameFromFen(standardBoardText);
+        Board standardBoard = FenUtils.createBoardFromFen(standardBoardText);
 
         System.out.println(standardBoard);
 
@@ -116,4 +116,12 @@ class FenUtilsTest {
         assertFalse(standardBoard.getActivePlayer().getOpponent().isInStalemate());
     }
 
+    @Test
+    void testFenToBoardToFen() {
+        String fen = "rnbqkbnr/ppp1p1pp/5p2/2Pp4/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 1";
+        Board board = FenUtils.createBoardFromFen(fen);
+        String expectedFen = FenUtils.createFenFromBoard(board);
+
+        Assertions.assertEquals(expectedFen, fen);
+    }
 }

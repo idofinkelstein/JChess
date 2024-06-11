@@ -2,6 +2,9 @@ package com.chess.pgn;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.piece.*;
+import com.chess.engine.piece.Color;
+
+import java.awt.*;
 
 import static com.chess.engine.board.Board.BOARD_SIZE;
 import static com.chess.engine.board.BoardUtils.POSITIONS;
@@ -13,8 +16,8 @@ public class FenParser {
     private final String currentPlayerText;
     private final String availableCastlingText;
     private final String enPassantText;
-    private final String movesSinceLastCaptureText;
-    private final String moveCountText;
+    private final String movesSinceLastCaptureText; // To be implemented
+    private final String moveCountText; // To be implemented
     private boolean isWhiteKingSideRookMove;
     private boolean isWhiteQueenSideRookMove;
     private boolean isBlackKingSideRookMove;
@@ -40,10 +43,9 @@ public class FenParser {
         // to be implemented
         Board.BoardBuilder builder = parseBoardText();
         builder = parseCurrentPlayerText(builder);
-        Board board = builder.build();
+        return builder.build();
 
-
-        return parseEnPassantText(board);
+//        return parseEnPassantText(board);
     }
 
     private Board.BoardBuilder parseBoardText() {
@@ -64,51 +66,54 @@ public class FenParser {
                 char c = boardLayout.charAt(k);
                 switch (c) {
                     case 'p' -> {
-                        boolean isFirstMove = false;
-                        if (i == 1) {
-                            isFirstMove = true;
+
+                        boolean isFirstMove = i == 1;
+                        Pawn pawn = new Pawn(POSITIONS[i][j], Color.BLACK, isFirstMove);
+                        builder.placePiece(pawn);
+                        if (isEnPassantPawn(pawn)) {
+                            builder.setEnPassantPawn(pawn);
                         }
-                        builder.placePiece(new Pawn(POSITIONS[i][j], Color.BLACK, isFirstMove));
+
                     }
                     case 'n' -> builder.placePiece(new Knight(POSITIONS[i][j], Color.BLACK, false));
                     case 'b' -> builder.placePiece(new Bishop(POSITIONS[i][j], Color.BLACK, false));
                     case 'r' -> {
-                        boolean isFirstMove = false;
-                        if ((i == 0 && j == 0 && isBlackQueenSideRookMove) || (i == 0 && j == 7 && isBlackKingSideRookMove)) {
-                            isFirstMove = true;
-                        }
+
+                        boolean isFirstMove =
+                                (i == 0 && j == 0 && isBlackQueenSideRookMove)
+                                        || (i == 0 && j == 7 && isBlackKingSideRookMove);
+
                         builder.placePiece(new Rook(POSITIONS[i][j], Color.BLACK, isFirstMove));
                     }
                     case 'q' -> builder.placePiece(new Queen(POSITIONS[i][j], Color.BLACK, false));
                     case 'k' -> {
-                        boolean isFirstMove = false;
-                        if (isBlackKingSideRookMove || isBlackQueenSideRookMove) {
-                            isFirstMove = true;
-                        }
+
+                        boolean isFirstMove = isBlackKingSideRookMove || isBlackQueenSideRookMove;
                         builder.placePiece(new King(POSITIONS[i][j], Color.BLACK, isFirstMove, isBlackKingSideRookMove, isBlackQueenSideRookMove));
                     }
                     case 'P' -> {
-                        boolean isFirstMove = false;
-                        if (i == 6) {
-                            isFirstMove = true;
+
+                        boolean isFirstMove = i == 6;
+                        Pawn pawn = new Pawn(POSITIONS[i][j], Color.WHITE, isFirstMove);
+                        builder.placePiece(pawn);
+                        if (isEnPassantPawn(pawn)) {
+                            builder.setEnPassantPawn(pawn);
                         }
-                        builder.placePiece(new Pawn(POSITIONS[i][j], Color.WHITE, isFirstMove));
                     }
                     case 'N' -> builder.placePiece(new Knight(POSITIONS[i][j], Color.WHITE, false));
                     case 'B' -> builder.placePiece(new Bishop(POSITIONS[i][j], Color.WHITE, false));
                     case 'R' -> {
-                        boolean isFirstMove = false;
-                        if ((i == 7 && j == 0 && isWhiteQueenSideRookMove) || (i == 7 && j == 7 && isWhiteKingSideRookMove)) {
-                            isFirstMove = true;
-                        }
+
+                        boolean isFirstMove =
+                                (i == 7 && j == 0 && isWhiteQueenSideRookMove)
+                                        || (i == 7 && j == 7 && isWhiteKingSideRookMove);
+
                         builder.placePiece(new Rook(POSITIONS[i][j], Color.WHITE, isFirstMove));
                     }
                     case 'Q' -> builder.placePiece(new Queen(POSITIONS[i][j], Color.WHITE, false));
                     case 'K' -> {
-                        boolean isFirstMove = false;
-                        if (isWhiteKingSideRookMove && isWhiteQueenSideRookMove) {
-                            isFirstMove = true;
-                        }
+
+                        boolean isFirstMove = isWhiteKingSideRookMove && isWhiteQueenSideRookMove;
                         builder.placePiece(new King(POSITIONS[i][j], Color.WHITE, isFirstMove, isWhiteKingSideRookMove, isWhiteQueenSideRookMove));
                     }
                 }
@@ -116,6 +121,21 @@ public class FenParser {
             }
         }
         return builder;
+    }
+
+    private boolean isEnPassantPawn(Pawn pawn) {
+        if (enPassantText.length() == 2) {
+            int j = CHESS_LETTER_NOTATION_TO_INDEX.get(String.valueOf(enPassantText.charAt(0)));
+            int i = CHESS_NUMBER_NOTATION_TO_INDEX.get(String.valueOf(enPassantText.charAt(1)));
+            if (i == 2) {
+                i++;
+            } else if (i == 5) {
+                i--;
+            }
+
+            return pawn.getPosition().equals(new Point(i, j));
+        }
+        return false;
     }
 
     private Board.BoardBuilder parseCurrentPlayerText(Board.BoardBuilder builder) {
@@ -137,21 +157,5 @@ public class FenParser {
                 isBlackQueenSideRookMove = true;
             }
         }
-    }
-
-    private Board parseEnPassantText(Board board) {
-        if (enPassantText.length() == 2) {
-            int j = CHESS_LETTER_NOTATION_TO_INDEX.get(String.valueOf(enPassantText.charAt(0)));
-            int i = CHESS_NUMBER_NOTATION_TO_INDEX.get(String.valueOf(enPassantText.charAt(1)));
-            if (i == 2) {
-                i++;
-            }
-            else if (i == 5) {
-                i--;
-            }
-            Pawn enPassant = (Pawn)board.getTile(i, j).getPiece();
-            board.setEnPassantPawn(enPassant);
-        }
-    return board;
     }
 }
