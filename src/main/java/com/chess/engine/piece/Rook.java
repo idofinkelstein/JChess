@@ -23,7 +23,7 @@ public class Rook extends Piece{
 
     @Override
     public String toString() {
-        return PieceType.ROOK.toString();
+        return color.equals(Color.WHITE) ? PieceType.ROOK.toString() : PieceType.ROOK.toString().toLowerCase();
     }
 
     @Override

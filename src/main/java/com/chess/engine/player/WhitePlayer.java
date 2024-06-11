@@ -66,4 +66,9 @@ public class WhitePlayer extends Player {
         }
         return castlingMoves;
     }
+
+    @Override
+    public String toString() {
+        return "WhitePlayer";
+    }
 }

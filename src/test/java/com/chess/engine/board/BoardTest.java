@@ -51,13 +51,13 @@ class BoardTest {
 
     @Test
     void canCastleMove() {
-        Piece whiteKing = new King(POSITIONS[7][4], Color.WHITE,true);
+        Piece whiteKing = new King(POSITIONS[7][4], Color.WHITE,true, true, true);
         Piece whiteRook = new Rook(POSITIONS[7][7], Color.WHITE, true);
         Piece whitePawn1 = new Pawn(POSITIONS[6][4], Color.WHITE, true);
         Piece whitePawn2 = new Pawn(POSITIONS[6][5], Color.WHITE, true);
         Piece whitePawn3 = new Pawn(POSITIONS[6][6], Color.WHITE, true);
         Piece whitePawn4 = new Pawn(POSITIONS[6][7], Color.WHITE, true);
-        Piece blackKing = new King(POSITIONS[0][4], Color.BLACK, true);
+        Piece blackKing = new King(POSITIONS[0][4], Color.BLACK, true, true, true);
         Piece blackQueen = new Queen(POSITIONS[0][3], Color.BLACK, true);
         Board board = new Board.BoardBuilder().setStartingPlayer()
                 .placePiece(whiteKing).placePiece(whiteRook)
@@ -95,7 +95,7 @@ class BoardTest {
         assertEquals(new Knight(POSITIONS[0][1], Color.BLACK, true), board.getTile(0, 1).getPiece());
         assertEquals(new Bishop(POSITIONS[0][2], Color.BLACK, true), board.getTile(0, 2).getPiece());
         assertEquals(new Queen(POSITIONS[0][3], Color.BLACK, true), board.getTile(0, 3).getPiece());
-        assertEquals(new King(POSITIONS[0][4], Color.BLACK, true), board.getTile(0, 4).getPiece());
+        assertEquals(new King(POSITIONS[0][4], Color.BLACK, true, true, true), board.getTile(0, 4).getPiece());
         assertEquals(new Bishop(POSITIONS[0][5], Color.BLACK, true), board.getTile(0, 5).getPiece());
         assertEquals(new Knight(POSITIONS[0][6], Color.BLACK, true), board.getTile(0, 6).getPiece());
         assertEquals(new Rook(POSITIONS[0][7], Color.BLACK, true), board.getTile(0, 7).getPiece());
@@ -120,7 +120,7 @@ class BoardTest {
         assertEquals(new Knight(POSITIONS[7][1], Color.WHITE, true), board.getTile(7, 1).getPiece());
         assertEquals(new Bishop(POSITIONS[7][2], Color.WHITE, true), board.getTile(7, 2).getPiece());
         assertEquals(new Queen(POSITIONS[7][3], Color.WHITE, true), board.getTile(7, 3).getPiece());
-        assertEquals(new King(POSITIONS[7][4], Color.WHITE, true), board.getTile(7, 4).getPiece());
+        assertEquals(new King(POSITIONS[7][4], Color.WHITE, true, true, true), board.getTile(7, 4).getPiece());
         assertEquals(new Bishop(POSITIONS[7][5], Color.WHITE, true), board.getTile(7, 5).getPiece());
         assertEquals(new Knight(POSITIONS[7][6], Color.WHITE, true), board.getTile(7, 6).getPiece());
         assertEquals(new Rook(POSITIONS[7][7], Color.WHITE, true), board.getTile(7, 7).getPiece());
@@ -138,5 +138,6 @@ class BoardTest {
         assertFalse(board.getActivePlayer().getOpponent().isInCheck());
         assertFalse(board.getActivePlayer().getOpponent().isInCheckMate());
         assertFalse(board.getActivePlayer().getOpponent().isInStalemate());
+        System.out.println(board);
     }
 }

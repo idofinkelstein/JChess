@@ -2,13 +2,19 @@ package com.chess.engine.piece;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.move.Move;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.List;
 
+@Getter
 public class King extends Piece {
-    public King(Point position, Color color, boolean isFirstMove){
+    private final boolean isKingSideCapable;
+    private final boolean isQueenSideCapable;
+    public King(Point position, Color color, boolean isFirstMove, boolean isKingSideCapable, boolean isQueenSideCapable){
         super(position, color, isFirstMove);
+        this.isKingSideCapable = isKingSideCapable;
+        this.isQueenSideCapable = isQueenSideCapable;
     }
 
     @Override
@@ -23,11 +29,11 @@ public class King extends Piece {
 
     @Override
     public String toString() {
-        return PieceType.KING.toString();
+        return color.equals(Color.WHITE) ? PieceType.KING.toString() : PieceType.KING.toString().toLowerCase();
     }
 
     @Override
     public Piece movePiece(Point destination) {
-        return new King(destination, getColor(), false);
+        return new King(destination, getColor(), false, false, false);
     }
 }

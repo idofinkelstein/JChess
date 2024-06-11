@@ -28,7 +28,7 @@ public class Queen extends Piece {
 
     @Override
     public String toString() {
-        return PieceType.QUEEN.toString();
+        return color.equals(Color.WHITE) ? PieceType.QUEEN.toString() : PieceType.QUEEN.toString().toLowerCase();
     }
 
 }

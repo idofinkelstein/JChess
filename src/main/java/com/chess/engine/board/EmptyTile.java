@@ -11,4 +11,9 @@ public class EmptyTile extends Tile{
     public boolean isOccupied() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "-";
+    }
 }
