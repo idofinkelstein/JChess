@@ -250,7 +250,7 @@ public class Table {
                             sourcePiece = sourceTile.getPiece();
                             if (sourcePiece == null) {
 
-                                isHighlighted = false;
+//                                isHighlighted = false;
                                 System.out.println("no piece here");
                                 sourceTile = null;
                             } else {
@@ -478,7 +478,8 @@ public class Table {
 
                 this.setBorder(BorderFactory.createLineBorder(Color.cyan, 5));
                 isHighlighted = false;
-            } else {
+            }
+            else {
                 this.setBorder(null);
             }
         }
