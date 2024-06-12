@@ -408,20 +408,20 @@ public class Table {
             if (highlightLegalMoves) {
                 for (Move move : pieceMoves(board)) {
                     if (move.getDestination().equals(getTilePosition())) {
+
                         Tile destinationTile = board.getTile(getTilePosition().x, getTilePosition().y);
-//                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
-//                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor())) {
-//                            try {
-//                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
-//                                add(new JLabel(new ImageIcon(image)));
-//                            } catch (IOException e) {
-//                                throw new RuntimeException(e);
-//                            }
-//                        }
-                        if (!destinationTile.isOccupied() && board.getActivePlayer().makeMove(move, board).moveStatus() == MoveAttempt.MoveStatus.OK) {
+                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor()
+                                != sourcePiece.getColor())) {
+
+                            this.setBorder(BorderFactory.createLineBorder(Color.red, 5));
+                        }
+                        if (!destinationTile.isOccupied()
+                                && board.getActivePlayer().makeMove(move, board).moveStatus()
+                                == MoveAttempt.MoveStatus.OK) {
+
                             if (move instanceof CastlingMove) {
                                 try {
-                                    System.out.println("green dot on tile" + getTilePosition());
+                                    System.out.println("blue dot on tile" + getTilePosition());
                                     final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//blue_dot.png"));
                                     add(new JLabel(new ImageIcon(image)));
                                 } catch (IOException e) {
