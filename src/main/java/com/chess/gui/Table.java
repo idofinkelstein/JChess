@@ -31,7 +31,7 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class Table {
 
-    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800, 800);
+    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     public static final Dimension BOARD_PANEL_DIMENSION = new Dimension(350, 400);
     public static final Dimension TILE_PANEL_DIMENSION = new Dimension(35, 35);
     private final JFrame gameFrame;
@@ -54,6 +54,7 @@ public class Table {
         this.gameFrame = new JFrame("Chess");
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
+        this.gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.boardPanel = new BoardPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.gameHistoryPanel = new GameHistoryPanel();
@@ -222,12 +223,14 @@ public class Table {
         private static final String PIECE_ICONS_PATH = "src//main//resources//piece_icons";
         private final int tileRowId;
         private final int tileColumnId;
+        private boolean isHighlighted;
 
 
         TilePanel(final BoardPanel boardPanel, final int tileRowId, final int tileColumnId) {
             super(new GridLayout());
             this.tileRowId = tileRowId;
             this.tileColumnId = tileColumnId;
+            this.isHighlighted = false;
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignPanelColor();
             assignTilePieceIcon(board);
@@ -239,6 +242,7 @@ public class Table {
                         sourceTile = null;
                         destinationTile = null;
                         sourcePiece = null;
+                        isHighlighted = false;
                     } else if (isLeftMouseButton(e)) {
                         if (sourceTile == null) {
 
@@ -246,9 +250,11 @@ public class Table {
                             sourcePiece = sourceTile.getPiece();
                             if (sourcePiece == null) {
 
+//                                isHighlighted = false;
                                 System.out.println("no piece here");
                                 sourceTile = null;
                             } else {
+                                isHighlighted = true;
                                 System.out.println(sourcePiece + " is about to move");
                             }
                         } else if (destinationTile == null) {
@@ -262,7 +268,7 @@ public class Table {
                                 if (moveAttempt.move() instanceof PawnPromotion pawnPromotion) {
 
                                     PieceType[] possibilities = {PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT};
-                                    promotionPiece = (PieceType)JOptionPane.showInputDialog(
+                                    promotionPiece = (PieceType) JOptionPane.showInputDialog(
                                             gameFrame,
                                             "Choose piece:",
                                             "Piece Promotion",
@@ -284,12 +290,14 @@ public class Table {
                             sourcePiece = null;
                         }
 
+
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
                                 gameHistoryPanel.redo(board, moveLog);
                                 takenPiecesPanel.addTakenPiece(moveLog);
                                 boardPanel.drawBoard(board);
+                                isHighlighted = false;
                             }
                         });
                     }
@@ -371,6 +379,7 @@ public class Table {
                 }
             });
             validate();
+
         }
 
         private void assignPanelColor() {
@@ -399,34 +408,31 @@ public class Table {
             if (highlightLegalMoves) {
                 for (Move move : pieceMoves(board)) {
                     if (move.getDestination().equals(getTilePosition())) {
+
                         Tile destinationTile = board.getTile(getTilePosition().x, getTilePosition().y);
-//                        Tile destinationTile = board.getTile(move.getDestination().x, move.getDestination().y);
-//                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor() != sourcePiece.getColor())) {
-//                            try {
-//                                final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//red_dot.png"));
-//                                add(new JLabel(new ImageIcon(image)));
-//                            } catch (IOException e) {
-//                                throw new RuntimeException(e);
-//                            }
-//                        }
-                        if (!destinationTile.isOccupied() && board.getActivePlayer().makeMove(move, board).moveStatus() == MoveAttempt.MoveStatus.OK) {
+                        if ((destinationTile.isOccupied() && destinationTile.getPiece().getColor()
+                                != sourcePiece.getColor())) {
+
+                            this.setBorder(BorderFactory.createLineBorder(Color.red, 5));
+                        }
+                        if (!destinationTile.isOccupied()
+                                && board.getActivePlayer().makeMove(move, board).moveStatus()
+                                == MoveAttempt.MoveStatus.OK) {
+
                             if (move instanceof CastlingMove) {
                                 try {
-                                    System.out.println("green dot on tile" + getTilePosition());
+                                    System.out.println("blue dot on tile" + getTilePosition());
                                     final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//blue_dot.png"));
                                     add(new JLabel(new ImageIcon(image)));
-                                }
-                                catch (IOException e) {
+                                } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                            }
-                            else {
+                            } else {
                                 try {
                                     System.out.println("green dot on tile" + getTilePosition());
                                     final BufferedImage image = ImageIO.read(new File("src//main//resources//misc//green_dot.png"));
                                     add(new JLabel(new ImageIcon(image)));
-                                }
-                                catch (IOException e) {
+                                } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
                             }
@@ -459,10 +465,23 @@ public class Table {
         public void drawTile(Board board) {
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignPanelColor();
+            assignPanelBorder(board);
             assignTilePieceIcon(board);
             highlightLegalMoves(board);
             validate();
             repaint();
+        }
+
+        private void assignPanelBorder(Board board) {
+            if (isHighlighted && board.getActivePlayer().getColor().
+                    equals(board.getTile(tileRowId, tileColumnId).getPiece().getColor())) {
+
+                this.setBorder(BorderFactory.createLineBorder(Color.cyan, 5));
+                isHighlighted = false;
+            }
+            else {
+                this.setBorder(null);
+            }
         }
     }
 }
