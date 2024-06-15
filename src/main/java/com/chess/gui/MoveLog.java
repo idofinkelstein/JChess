@@ -1,10 +1,12 @@
 package com.chess.gui;
 
 import com.chess.engine.move.Move;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class MoveLog {
     private final List<Move> moves;
 
@@ -14,10 +16,6 @@ public class MoveLog {
 
     public void addMove(Move move) {
         moves.add(move);
-    }
-
-    public List<Move> getMoves() {
-        return moves;
     }
 
     public void clear() {
