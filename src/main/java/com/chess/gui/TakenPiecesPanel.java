@@ -1,18 +1,21 @@
 package com.chess.gui;
 
 import com.chess.engine.move.Move;
-import com.chess.engine.piece.Piece;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class TakenPiecesPanel extends JPanel {
 
+    public static final String SRC_MAIN_RESOURCES_PIECE_ICONS = "src//main//resources//piece_icons";
     private final JPanel upperBorder;
     private final JPanel lowerBorder;
 
@@ -49,8 +52,8 @@ public class TakenPiecesPanel extends JPanel {
             }
         }
 
-        blackTakenPieces.sort(Comparator.comparingInt(move -> move.getMovedPiece().getPieceValue()));
-        whiteTakenPieces.sort(Comparator.comparingInt(move -> move.getMovedPiece().getPieceValue()));
+        blackTakenPieces.sort(Comparator.comparingInt(move -> move.getAttackedPiece().getPieceValue()));
+        whiteTakenPieces.sort(Comparator.comparingInt(move -> move.getAttackedPiece().getPieceValue()));
 
         addTakenPiecesToPanel(blackTakenPieces, upperBorder);
         addTakenPiecesToPanel(whiteTakenPieces, lowerBorder);
@@ -58,9 +61,15 @@ public class TakenPiecesPanel extends JPanel {
         validate();
     }
 
-    private static void addTakenPiecesToPanel(List<Move> blackTakenPieces, JPanel upperBorder) {
-        for (Move move : blackTakenPieces) {
-            upperBorder.add(new JLabel(move.getAttackedPiece().toString()));
+    private static void addTakenPiecesToPanel(List<Move> takenPieces, JPanel takenPiecePanel) {
+        for (Move move : takenPieces) {
+            try {
+                final BufferedImage image = ImageIO.read(new File( SRC_MAIN_RESOURCES_PIECE_ICONS + File.separator + move.getAttackedPiece().getColor().toString().charAt(0) +
+                        move.getAttackedPiece().toString() + ".gif"));
+                takenPiecePanel.add(new JLabel(new ImageIcon(image)));
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

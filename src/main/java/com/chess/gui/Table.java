@@ -98,13 +98,10 @@ public class Table {
         fileMenu.add(saveGame);
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.exit(0);
-                System.out.println("Exit JChess!");
+        exitMenuItem.addActionListener(actionEvent -> {
+            System.exit(0);
+            System.out.println("Exit JChess!");
 
-            }
         });
         fileMenu.add(exitMenuItem);
 
@@ -133,62 +130,56 @@ public class Table {
 
     private JMenuItem getSaveGamejMenuItem() {
         final JMenuItem saveGame = new JMenuItem("Save Game");
-        saveGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("Save game");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        saveGame.addActionListener(actionEvent -> {
+            System.out.println("Save game");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-                String filename = sdf.format(new Date())
-                        .replaceAll("\\s+", "_")
-                        .replaceAll(":", "_")
-                        .concat(".fen");
+            String filename = sdf.format(new Date())
+                    .replaceAll("\\s+", "_")
+                    .replaceAll(":", "_")
+                    .concat(".fen");
 
-                Path filePath = Path.of("src/main/resources/saved_games");
-                Path absolutePath = Path.of(String.valueOf(filePath), filename);
-                String gameText = FenUtils.createFenFromBoard(board);
+            Path filePath = Path.of("src/main/resources/saved_games");
+            Path absolutePath = Path.of(String.valueOf(filePath), filename);
+            String gameText = FenUtils.createFenFromBoard(board);
 
-                try {
-                    IOHandler.saveGame(gameText, absolutePath);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
+            try {
+                IOHandler.saveGame(gameText, absolutePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+
         });
         return saveGame;
     }
 
     private JMenuItem getLoadGamejMenuItem() {
         final JMenuItem loadGame = new JMenuItem("Load Game");
-        loadGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("Load Game");
-                JFileChooser fileChooser = new JFileChooser();
-                FileFilter filter = new FileNameExtensionFilter("fen files", "fen");
-                fileChooser.addChoosableFileFilter(filter);
-                fileChooser.setCurrentDirectory(new File("src/main/resources/saved_games"));
-                fileChooser.setDialogTitle("Choose Game");
+        loadGame.addActionListener(actionEvent -> {
+            System.out.println("Load Game");
+            JFileChooser fileChooser = new JFileChooser();
+            FileFilter filter = new FileNameExtensionFilter("fen files", "fen");
+            fileChooser.addChoosableFileFilter(filter);
+            fileChooser.setCurrentDirectory(new File("src/main/resources/saved_games"));
+            fileChooser.setDialogTitle("Choose Game");
 
 
-                int ret = fileChooser.showDialog(null, "Open file");
+            int ret = fileChooser.showDialog(null, "Open file");
 
-                File file = null;
-                if (ret == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
-                }
-                if (file != null) {
-                    try {
-                        String gameText = IOHandler.loadGame(String.valueOf(file));
-                        board = FenUtils.createBoardFromFen(gameText);
-                        boardPanel.drawBoard(board);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
+            File file = null;
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                file = fileChooser.getSelectedFile();
             }
+            if (file != null) {
+                try {
+                    String gameText = IOHandler.loadGame(String.valueOf(file));
+                    board = FenUtils.createBoardFromFen(gameText);
+                    boardPanel.drawBoard(board);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         });
         return loadGame;
     }
@@ -197,13 +188,10 @@ public class Table {
         final JMenu preferenceMenu = new JMenu("Preferences");
 
         final JCheckBoxMenuItem highLightCheckBoxMenuItem = new JCheckBoxMenuItem("Highlight Legal Moves", false);
-        highLightCheckBoxMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("Highlight Legal Moves!");
-                highlightLegalMoves = highLightCheckBoxMenuItem.isSelected();
+        highLightCheckBoxMenuItem.addActionListener(actionEvent -> {
+            System.out.println("Highlight Legal Moves!");
+            highlightLegalMoves = highLightCheckBoxMenuItem.isSelected();
 
-            }
         });
         preferenceMenu.add(highLightCheckBoxMenuItem);
 
@@ -321,21 +309,18 @@ public class Table {
 
                                     if (sourceTile.getPiece().getColor().equals(board.getActivePlayer().getColor())) {
                                         boardPanel.tilePanels[sourceTile.getPosition().x][sourceTile.getPosition().y]
-                                                .setHighlighted(true);
+                                                .setHighlighted();
                                     }
                                 }
                             }
                         }
 
 
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                gameHistoryPanel.redo(board, moveLog);
-                                takenPiecesPanel.addTakenPiece(moveLog);
-                                boardPanel.drawBoard(board);
-                                isHighlighted = false;
-                            }
+                        SwingUtilities.invokeLater(() -> {
+                            gameHistoryPanel.redo(board, moveLog);
+                            takenPiecesPanel.addTakenPiece(moveLog);
+                            boardPanel.drawBoard(board);
+                            isHighlighted = false;
                         });
                     }
                 }
@@ -419,8 +404,8 @@ public class Table {
 
         }
 
-        private void setHighlighted(boolean highlight) {
-            isHighlighted = highlight;
+        private void setHighlighted() {
+            isHighlighted = true;
         }
 
         private void assignPanelColor() {
@@ -439,7 +424,7 @@ public class Table {
                             board.getTile(tileRowId, tileColumnId).getPiece().toString() + ".gif"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
 
             }
