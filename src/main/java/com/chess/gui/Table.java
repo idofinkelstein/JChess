@@ -242,15 +242,14 @@ public class Table {
                         sourceTile = null;
                         destinationTile = null;
                         sourcePiece = null;
-                        isHighlighted = false;
                     } else if (isLeftMouseButton(e)) {
                         if (sourceTile == null) {
 
                             sourceTile = board.getTile(tileRowId, tileColumnId);
                             sourcePiece = sourceTile.getPiece();
+
                             if (sourcePiece == null) {
 
-//                                isHighlighted = false;
                                 System.out.println("no piece here");
                                 sourceTile = null;
                             } else {
@@ -260,34 +259,49 @@ public class Table {
                         } else if (destinationTile == null) {
 
                             destinationTile = board.getTile(tileRowId, tileColumnId);
-                            Move move = MoveFactory.constructMove(board, destinationTile.getPosition(),
-                                    sourceTile.getPosition());
 
-                            MoveAttempt moveAttempt = board.getActivePlayer().makeMove(move, board);
-                            if (moveAttempt.moveStatus() == MoveAttempt.MoveStatus.OK) {
-                                if (moveAttempt.move() instanceof PawnPromotion pawnPromotion) {
+                            if (destinationTile.getPiece() != null
+                                    && destinationTile.getPiece().getColor().equals(board.getActivePlayer().getColor())) {
 
-                                    PieceType[] possibilities = {PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT};
-                                    promotionPiece = (PieceType) JOptionPane.showInputDialog(
-                                            gameFrame,
-                                            "Choose piece:",
-                                            "Piece Promotion",
-                                            JOptionPane.PLAIN_MESSAGE,
-                                            null,
-                                            possibilities,
-                                            PieceType.QUEEN);
-                                    pawnPromotion.setPromotionType(promotionPiece);
-                                    moveAttempt = board.getActivePlayer().makeMove(move, board);
-                                }
-                                board = moveAttempt.board();
-                                moveLog.addMove(move);
+                                sourceTile = destinationTile;
+                                sourcePiece = destinationTile.getPiece();
+                                destinationTile = null;
+                                isHighlighted = true;
                             } else {
-                                System.out.println(moveAttempt.moveStatus().toString());
+                                Move move = MoveFactory.constructMove(board, destinationTile.getPosition(),
+                                        sourceTile.getPosition());
+
+                                MoveAttempt moveAttempt = board.getActivePlayer().makeMove(move, board);
+                                if (moveAttempt.moveStatus() == MoveAttempt.MoveStatus.OK) {
+                                    if (moveAttempt.move() instanceof PawnPromotion pawnPromotion) {
+
+                                        PieceType[] possibilities = {PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT};
+                                        promotionPiece = (PieceType) JOptionPane.showInputDialog(
+                                                gameFrame,
+                                                "Choose piece:",
+                                                "Piece Promotion",
+                                                JOptionPane.PLAIN_MESSAGE,
+                                                null,
+                                                possibilities,
+                                                PieceType.QUEEN);
+                                        pawnPromotion.setPromotionType(promotionPiece);
+                                        moveAttempt = board.getActivePlayer().makeMove(move, board);
+                                    }
+                                    board = moveAttempt.board();
+                                    moveLog.addMove(move);
+                                    sourceTile = null;
+                                    destinationTile = null;
+                                    sourcePiece = null;
+                                } else {
+                                    System.out.println(moveAttempt.moveStatus().toString());
+                                    destinationTile = null;
+
+                                    if (sourceTile.getPiece().getColor().equals(board.getActivePlayer().getColor())) {
+                                        boardPanel.tilePanels[sourceTile.getPosition().x][sourceTile.getPosition().y]
+                                                .setHighlighted(true);
+                                    }
+                                }
                             }
-                            System.out.println("now clicking on destination tile");
-                            sourceTile = null;
-                            destinationTile = null;
-                            sourcePiece = null;
                         }
 
 
@@ -380,6 +394,10 @@ public class Table {
             });
             validate();
 
+        }
+
+        private void setHighlighted(boolean highlight) {
+            isHighlighted = highlight;
         }
 
         private void assignPanelColor() {
@@ -478,8 +496,7 @@ public class Table {
 
                 this.setBorder(BorderFactory.createLineBorder(Color.cyan, 5));
                 isHighlighted = false;
-            }
-            else {
+            } else {
                 this.setBorder(null);
             }
         }
