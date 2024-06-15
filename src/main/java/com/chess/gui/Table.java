@@ -88,48 +88,50 @@ public class Table {
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
 
-        final JMenuItem openPGN = new JMenuItem("Load PGN file");
-        openPGN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("open up that PGN file");
+        final JMenuItem newGame = getNewGamejMenuItem();
+        fileMenu.add(newGame);
 
-            }
-        });
-        fileMenu.add(openPGN);
-
-        final JMenuItem loadGame = new JMenuItem("Load Game");
-        loadGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("Load Game");
-                JFileChooser fileChooser = new JFileChooser();
-                FileFilter filter = new FileNameExtensionFilter("fen files", "fen");
-                fileChooser.addChoosableFileFilter(filter);
-                fileChooser.setCurrentDirectory(new java.io.File("src/main/resources/saved_games"));
-                fileChooser.setDialogTitle("Choose Game");
-
-
-                int ret = fileChooser.showDialog(null, "Open file");
-
-                File file = null;
-                if (ret == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
-                }
-                if (file != null) {
-                    try {
-                        String gameText = IOHandler.loadGame(String.valueOf(file));
-                        board = FenUtils.createBoardFromFen(gameText);
-                        boardPanel.drawBoard(board);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-        });
+        final JMenuItem loadGame = getLoadGamejMenuItem();
         fileMenu.add(loadGame);
 
+        final JMenuItem saveGame = getSaveGamejMenuItem();
+        fileMenu.add(saveGame);
+
+        final JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
+                System.out.println("Exit JChess!");
+
+            }
+        });
+        fileMenu.add(exitMenuItem);
+
+        return fileMenu;
+    }
+
+    private JMenuItem getNewGamejMenuItem() {
+        final JMenuItem newGame = new JMenuItem("New Game");
+        newGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                loadNewGame();
+
+            }
+
+            private void loadNewGame() {
+                board = new BoardBuilder().populateMap().setStartingPlayer().build();
+                boardPanel.drawBoard(board);
+                moveLog.clear();
+                gameHistoryPanel.redo(board, moveLog);
+                takenPiecesPanel.removeAll();
+            }
+        });
+        return newGame;
+    }
+
+    private JMenuItem getSaveGamejMenuItem() {
         final JMenuItem saveGame = new JMenuItem("Save Game");
         saveGame.addActionListener(new ActionListener() {
             @Override
@@ -154,20 +156,41 @@ public class Table {
 
             }
         });
-        fileMenu.add(saveGame);
+        return saveGame;
+    }
 
-        final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(new ActionListener() {
+    private JMenuItem getLoadGamejMenuItem() {
+        final JMenuItem loadGame = new JMenuItem("Load Game");
+        loadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.exit(0);
-                System.out.println("Exit JChess!");
+                System.out.println("Load Game");
+                JFileChooser fileChooser = new JFileChooser();
+                FileFilter filter = new FileNameExtensionFilter("fen files", "fen");
+                fileChooser.addChoosableFileFilter(filter);
+                fileChooser.setCurrentDirectory(new File("src/main/resources/saved_games"));
+                fileChooser.setDialogTitle("Choose Game");
+
+
+                int ret = fileChooser.showDialog(null, "Open file");
+
+                File file = null;
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    file = fileChooser.getSelectedFile();
+                }
+                if (file != null) {
+                    try {
+                        String gameText = IOHandler.loadGame(String.valueOf(file));
+                        board = FenUtils.createBoardFromFen(gameText);
+                        boardPanel.drawBoard(board);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 
             }
         });
-        fileMenu.add(exitMenuItem);
-
-        return fileMenu;
+        return loadGame;
     }
 
     private JMenu createPreferenceMenu() {
